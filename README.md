@@ -71,6 +71,10 @@ Charlotte Lucas,(Charlotte|Lucas)
 ")
 ```
 
+Notice that for each character, we've defined a regular expression (sometimes allowing ambiguity, sometimes not) for detecting their name. Suppose we want to "classify" chunks based on whether this regex is present.
+
+With fuzzyjoin's `regex_join` function, we do:
+
 
 ```r
 character_chunks <- chunks %>%
