@@ -41,8 +41,6 @@ fuzzy_join <- function(x, y, by = NULL, match_fun, ...) {
     x_indices_l <- indices_x$indices[x_indices]
     y_indices_l <- indices_y$indices[y_indices]
 
-    num_each <- sapply(x_indices_l, length) * sapply(y_indices_l, length)
-
     xls <- sapply(x_indices_l, length)
     yls <- sapply(y_indices_l, length)
 
