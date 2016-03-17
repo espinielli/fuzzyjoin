@@ -1,4 +1,4 @@
 library(testthat)
-library(tidytext)
+library(fuzzyjoin)
 
-test_check("tidytext")
+test_check("fuzzyjoin")

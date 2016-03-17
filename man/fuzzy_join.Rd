@@ -20,7 +20,7 @@ TRUE or FALSE as to whether they are a match}
 \item{...}{Extra arguments passed to match_fun}
 }
 \description{
-The \code{match_fun} argument is called once on the pair of all unique comparisons:
-thus, it should be efficient and vectorized.
+The \code{match_fun} argument is called once on a vector with all pairs
+of unique comparisons: thus, it should be efficient and vectorized.
 }
 

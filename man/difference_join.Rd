@@ -29,7 +29,4 @@ iris \%>\%
   difference_join(sepal_lengths, max_dist = .5)
 
 }
-\seealso{
-\code{\link{stringdist-methods}}
-}
 

@@ -5,8 +5,6 @@
 #' @param by Columns by which to join the two tables
 #' @param max_dist Maximum distance to use for joining
 #'
-#' @seealso \code{\link{stringdist-methods}}
-#'
 #' @examples
 #'
 #' library(dplyr)
