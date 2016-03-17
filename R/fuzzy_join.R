@@ -21,9 +21,11 @@ fuzzy_join <- function(x, y, by = NULL, match_fun, ...) {
     col_x <- x[[by$x[i]]]
     col_y <- y[[by$y[i]]]
 
-    indices_x <- data_frame(col = col_x, indices = seq_along(col_x)) %>%
+    indices_x <- dplyr::data_frame(col = col_x,
+                                   indices = seq_along(col_x)) %>%
       tidyr::nest(indices)
-    indices_y <- data_frame(col = col_y, indices = seq_along(col_y)) %>%
+    indices_y <- dplyr::data_frame(col = col_y,
+                                   indices = seq_along(col_y)) %>%
       tidyr::nest(indices)
 
     u_x <- indices_x$col
@@ -31,7 +33,6 @@ fuzzy_join <- function(x, y, by = NULL, match_fun, ...) {
     n_x <- length(u_x)
     n_y <- length(u_y)
 
-    # use col_y first so that order of x is preserved, not y
     m <- outer(u_x, u_y, match_fun)
 
     # return as a data frame of x and y indices that match
@@ -47,7 +48,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun, ...) {
     x_rep <- unlist(lapply(seq_along(x_indices_l), function(i) rep(x_indices_l[[i]], each = yls[i])))
     y_rep <- unlist(lapply(seq_along(y_indices_l), function(i) rep(y_indices_l[[i]], xls[i])))
 
-    data_frame(i = i, x = x_rep, y = y_rep)
+    dplyr::data_frame(i = i, x = x_rep, y = y_rep)
   }))
 
   if (length(by$x) > 1) {

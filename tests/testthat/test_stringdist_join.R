@@ -1,4 +1,5 @@
 library(ggplot2)
+library(dplyr)
 
 context("stringdist_join")
 

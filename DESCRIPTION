@@ -10,9 +10,10 @@ Description: Join tables together on inexact matching
 License: MIT + file LICENSE
 LazyData: TRUE
 VignetteBuilder: knitr
-Imports:
+Imports: 
     stringdist,
-    stringr
-Suggests:
+    stringr,
+    dplyr
+Suggests: 
     testthat
 RoxygenNote: 5.0.1

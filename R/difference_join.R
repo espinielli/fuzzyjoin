@@ -20,9 +20,6 @@
 #' @export
 difference_join <- function(x, y, by = NULL, max_dist = 1) {
   match_fun <- function(v1, v2) {
-    print(v1)
-    print(v2)
-    print(abs(v1 - v2) <= max_dist)
     abs(v1 - v2) <= max_dist
   }
 
