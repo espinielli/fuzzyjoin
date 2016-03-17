@@ -13,7 +13,9 @@ VignetteBuilder: knitr
 Imports: 
     stringdist,
     stringr,
-    dplyr
+    dplyr,
+    tidyr (>= 0.4.0),
+    purrr
 Suggests: 
     testthat
 RoxygenNote: 5.0.1

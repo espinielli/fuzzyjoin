@@ -23,10 +23,13 @@ fuzzy_join <- function(x, y, by = NULL, match_fun, ...) {
 
     indices_x <- dplyr::data_frame(col = col_x,
                                    indices = seq_along(col_x)) %>%
-      tidyr::nest(indices)
+      tidyr::nest(indices) %>%
+      mutate(indices = purrr::map(data, "indices"))
+
     indices_y <- dplyr::data_frame(col = col_y,
                                    indices = seq_along(col_y)) %>%
-      tidyr::nest(indices)
+      tidyr::nest(indices) %>%
+      mutate(indices = purrr::map(data, "indices"))
 
     u_x <- indices_x$col
     u_y <- indices_y$col
