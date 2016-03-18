@@ -27,13 +27,13 @@
 #'
 #' # but we can regex match them
 #' diamonds %>%
-#'  regex_join(d, by = c(cut = "regex_name"))
+#'  regex_inner_join(d, by = c(cut = "regex_name"))
 #'
 #' @export
-regex_join <- function(x, y, by = NULL) {
+regex_inner_join <- function(x, y, by = NULL) {
   match_fun <- function(v1, v2) {
     stringr::str_detect(v1, v2)
   }
 
-  fuzzy_join(x, y, by = by, match_fun = match_fun)
+  fuzzy_inner_join(x, y, by = by, match_fun = match_fun)
 }

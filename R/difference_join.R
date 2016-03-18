@@ -13,13 +13,13 @@
 #' sepal_lengths <- data_frame(Sepal.Length = c(5, 6, 7), Type = 1:3)
 #'
 #' iris %>%
-#'   difference_join(sepal_lengths, max_dist = .5)
+#'   difference_inner_join(sepal_lengths, max_dist = .5)
 #'
 #' @export
-difference_join <- function(x, y, by = NULL, max_dist = 1) {
+difference_inner_join <- function(x, y, by = NULL, max_dist = 1) {
   match_fun <- function(v1, v2) {
     abs(v1 - v2) <= max_dist
   }
 
-  fuzzy_join(x, y, by = by, match_fun = match_fun)
+  fuzzy_inner_join(x, y, by = by, match_fun = match_fun)
 }

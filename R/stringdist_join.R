@@ -30,18 +30,19 @@
 #'
 #' # but we can match when they're fuzzy joined
 #' diamonds %>%
-#'  stringdist_join(d, by = c(cut = "approximate_name"))
+#'  stringdist_inner_join(d, by = c(cut = "approximate_name"))
 #'
 #' @export
-stringdist_join <- function(x, y, by = NULL, max_dist = 2, ignore_case = FALSE, ...) {
+stringdist_inner_join <- function(x, y, by = NULL, max_dist = 2, ignore_case = FALSE, ...) {
   match_fun <- function(v1, v2) {
     if (ignore_case) {
       v1 <- stringr::str_to_lower(v1)
       v2 <- stringr::str_to_lower(v2)
     }
+
     dists <- stringdist::stringdist(v1, v2, ...)
     dists <= max_dist
   }
 
-  fuzzy_join(x, y, by = by, match_fun = match_fun)
+  fuzzy_inner_join(x, y, by = by, match_fun = match_fun)
 }

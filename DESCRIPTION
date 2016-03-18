@@ -13,14 +13,18 @@ Description: Join tables together based not on whether columns
 License: MIT + file LICENSE
 LazyData: TRUE
 VignetteBuilder: knitr
-Imports: 
+Depends: R (>= 2.10)
+Imports:
     stringdist,
     stringr,
     dplyr,
     tidyr (>= 0.4.0),
     purrr
-Suggests: 
+Suggests:
     testthat,
     knitr,
-    ggplot2
+    ggplot2,
+    qdapDictionaries,
+    readr,
+    rvest
 RoxygenNote: 5.0.1

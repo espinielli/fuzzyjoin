@@ -4,7 +4,9 @@
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-",
+  cache = TRUE,
+  fig.path = "README-fig/",
+  cache.path = "README-cache/",
   message = FALSE,
   warning = FALSE
 )
@@ -15,33 +17,100 @@ fuzzyjoin: Join data frames on inexact matching
 
 The fuzzyjoin package is a variation on dplyr's [join](http://www.inside-r.org/node/230646) operations that allows matching not just on values that match between columns, but on inexact matching. This includes:
 
-* Numeric values that are within some distance (`difference_join`)
-* Strings that are similiar in Levenshtein/cosine/Jaccard distance, or [other metrics](http://finzi.psych.upenn.edu/library/stringdist/html/stringdist-metrics.html) from the [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) package (`stringdist_join`)
-* A regular expression in one column matching to another (`regex_join`)
+* Numeric values that are within some distance (`difference_inner_join`)
+* Strings that are similiar in Levenshtein/cosine/Jaccard distance, or [other metrics](http://finzi.psych.upenn.edu/library/st/html/st-metrics.html) from the [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) package (`stringdist_inner_join`)
+* A regular expression in one column matching to another (`regex_inner_join`)
 
-### Examples
+One relevant use case is for classifying freeform text data while allowing 
 
-Consider the book Pride and Prejudice, by Jane Austen (retrieved from Project Gutenberg and provided as an extra dataset). We could split the books up into "chunks" of 50 lines each.
+### Example of `stringdist_inner_join`: Correcting misspellings against a dictionary
+
+Often you find yourself with a set of words that you want to combine with a dictionary.
+
+The fuzzyjoin package comes with a set of common misspellings ([from Wikipedia](https://en.wikipedia.org/wiki/Wikipedia:Lists_of_common_misspellings/For_machines)):
 
 ```{r}
 library(dplyr)
-library(stringr)
-
 library(fuzzyjoin)
+data(misspellings)
+
+misspellings
+```
+
+```{r words}
+# use the dictionary of words from the qdapDictionaries package,
+# which is based on the Nettalk corpus.
+library(qdapDictionaries)
+words <- tbl_df(DICTIONARY)
+
+words
+```
+
+As an example, we'll pick 1000 of these words (you could try it on all of them though), and use `stringdist_inner_join` to join them against our dictionary.
+
+```{r joined, dependson = "words"}
+set.seed(2016)
+
+joined <- misspellings %>%
+  sample_n(1000) %>%
+  stringdist_inner_join(words, by = c(misspelling = "word"), max_dist = 1)
+```
+
+By default, `stringdist_inner_join` uses optimal string alignment (Damerau–Levenshtein distance), and we're setting a maximum distance of 1 for a join. Notice that they've been joined in cases where `misspelling` is close to (but not equal to) `word`:
+
+```{r dependson = "joined"}
+joined
+```
+
+Note that there are some redundancies; words that could be multiple items in the dictionary. These end up with one row per "guess" in the output. How many words did we classify?
+
+```{r dependson = "joined"}
+joined %>%
+  count(misspelling, correct)
+```
+
+So we found a match in the dictionary for about half of the misspellings. In how many of the ones we classified did we get at least one of our guesses right?
+
+```{r dependson = "joined"}
+which_correct <- joined %>%
+  group_by(misspelling, correct) %>%
+  summarize(guesses = n(), one_correct = any(correct == word))
+
+ggplot(which_correct)
+which_correct
+
+# percentage of guesses getting at least one right
+mean(which_correct$n)
+
+# number uniquely correct (out of the original 1000)
+sum(which_correct$guesses == 1 & which_correct$one_correct)
+```
+
+Not bad. If we increase our distance threshold, we'll increase the fraction with a correct guess, but also get more false positive guesses.
+
+You can try other distance thresholds, other dictionaries, and other distance metrics (see [stringdist-metrics] for more). This function is especially useful on a domain-specific dataset, such as free-form survey input that is likely to be close to one of a handful of responses.
+
+### Example of `regex_inner_join`: Classifying text based on regular expressions
+
+Consider the book Pride and Prejudice, by Jane Austen (retrieved from [Project Gutenberg](https://www.gutenberg.org/) and provided as an extra dataset in `extdata`). We could split the books up into "passages" of 50 lines each.
+
+```{r passages}
+library(dplyr)
+library(stringr)
 
 f <- system.file("extdata", "pride_and_prejudice.txt.zip", package = "fuzzyjoin")
 lines <- readLines(unz(f, "pride_and_prejudice.txt"))
 
-chapters <- data_frame(text = lines) %>%
-  group_by(chunk = 1 + row_number() %/% 50) %>%
+passages <- data_frame(text = lines) %>%
+  group_by(passage = 1 + row_number() %/% 50) %>%
   summarize(text = paste(text, collapse = " "))
 
-chunks
+passages
 ```
 
-Suppose we wanted to divide the chunks based on which character's name is mentioned in each.
+Suppose we wanted to divide the passages based on which character's name is mentioned in each. Character's names may differ in how they are presented, so we construct a regular expression for each and pair it with that character's name.
 
-```{r}
+```{r characters}
 characters <- readr::read_csv(
 "character,character_regex
 Elizabeth,Elizabeth
@@ -61,44 +130,54 @@ Charlotte Lucas,(Charlotte|Lucas)
 ")
 ```
 
-Notice that for each character, we've defined a regular expression (sometimes allowing ambiguity, sometimes not) for detecting their name. Suppose we want to "classify" chunks based on whether this regex is present.
+Notice that for each character, we've defined a regular expression (sometimes allowing ambiguity, sometimes not) for detecting their name. Suppose we want to "classify" passages based on whether this regex is present.
 
-With fuzzyjoin's `regex_join` function, we do:
+With fuzzyjoin's `regex_inner_join` function, we do:
 
-```{r}
-character_chunks <- chunks %>%
-  regex_join(characters, by = c(text = "character_regex"))
+```{r character_passages, dependson = c("passages", "characters")}
+character_passages <- passages %>%
+  regex_inner_join(characters, by = c(text = "character_regex"))
 ```
 
-This combines the two data frames based on cases where the `chunks$text` column is matched by the `characters$character_regex` column, resulting in:
+This combines the two data frames based on cases where the `passages$text` column is matched by the `characters$character_regex` column. (Note that the dataset with the text column must always come first). This results in:
 
-```{r}
-character_chunks %>%
-  select(chunk, character, text)
+```{r dependson = "character_passages"}
+character_passages %>%
+  select(passage, character, text)
 ```
 
-This shows that Mr. Bennet's name appears in chunks 1, 2, 4, and 6, while Charlotte Lucas's appears in 3. Notice that having fuzzy-joined the datasets, some chunks will end up duplicated, while it's possibly others will be missing entirely.
+This shows that Mr. Bennet's name appears in passages 1, 2, 4, and 6, while Charlotte Lucas's appears in 3. Notice that having fuzzy-joined the datasets, some passages will end up duplicated (those with multiple names in them), while it's possible others will be missing entirely (those without names).
 
-We could ask which characters are mentioned in the most chunks:
+We could ask which characters are mentioned in the most passages:
 
-```{r}
-character_chunks %>%
+```{r dependson = "character_passages"}
+character_passages %>%
   count(character, sort = TRUE)
 ```
 
-The data is also well suited to discover which characters appear in scenes together, and to cluster them based on this:
+The data is also well suited to discover which characters appear in scenes together, and to cluster them to find groupings of characters (like in [this analysis]).
 
-```{r fig.width = 6, fig.height = 6}
-chunk_character_matrix <- character_chunks %>%
-  group_by(chunk) %>%
+```{r character_passages_matrix, dependson = "character_passages", fig.width = 6, fig.height = 6}
+passage_character_matrix <- character_passages %>%
+  group_by(passage) %>%
   filter(n() > 1) %>%
-  reshape2::acast(character ~ chunk, fun.aggregate = length, fill = 0)
+  reshape2::acast(character ~ passage, fun.aggregate = length, fill = 0)
 
-chunk_character_matrix <- chunk_character_matrix / rowSums(chunk_character_matrix)
+passage_character_matrix <- passage_character_matrix / rowSums(passage_character_matrix)
 
-h <- hclust(dist(chunk_character_matrix, method = "manhattan"))
+h <- hclust(dist(passage_character_matrix, method = "manhattan"))
 
 plot(h)
 ```
 
-Other options would include doing sentiment analysis on text surrounding each character's name, [similar to Julia Silge's analysis here](http://juliasilge.com/blog/You-Must-Allow-Me/).
+Other options for further analysis of this fuzzy-joined dataset include doing sentiment analysis on text surrounding each character's name, [similar to Julia Silge's analysis here](http://juliasilge.com/blog/You-Must-Allow-Me/).
+
+### Future Work
+
+A few things I'd like to work on:
+
+* **join operations besides inner**: I haven't implemented the `left_join`, `semi_join`, and `anti_join` equivalents. I see `left_join` as being especially important since you'll often also want to examine the words/passages/etc that *didn't* get matched.
+
+* **Shortcuts on string distance matching**: If two strings are more than 1 character apart in length, the method is `osa`, and `max_dist` is 1, you don't even need to compare them.
+
+* **More examples**: I've used this package in other powerful ways, but on proprietary data. I'm interested in ideas for use cases that can be provided as vignettes.

@@ -1,14 +1,14 @@
 library(ggplot2)
 library(dplyr)
 
-context("stringdist_join")
+context("stringdist_inner_join")
 
-test_that("stringdist_join works on a large df with multiples in each", {
+test_that("stringdist_inner_join works on a large df with multiples in each", {
   # create something with names close to the cut column in the diamonds dataset
   d <- data_frame(cut2 = c("Idea", "Premiums", "Premiom",
                            "VeryGood", "VeryGood", "Faiir")) %>%
     mutate(type = row_number())
-  j <- stringdist_join(diamonds, d, by = c(cut = "cut2"))
+  j <- stringdist_inner_join(diamonds, d, by = c(cut = "cut2"))
 
   result <- j %>%
     count(cut, cut2) %>%

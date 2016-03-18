@@ -14,7 +14,7 @@
 #' @importFrom dplyr %>%
 #'
 #' @export
-fuzzy_join <- function(x, y, by = NULL, match_fun, ...) {
+fuzzy_inner_join <- function(x, y, by = NULL, match_fun, ...) {
   by <- common_by(by, x, y)
 
   matches <- dplyr::bind_rows(lapply(seq_along(by$x), function(i) {
