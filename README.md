@@ -11,11 +11,11 @@ The fuzzyjoin package is a variation on dplyr's [join](http://www.inside-r.org/n
 * Strings that are similiar in Levenshtein/cosine/Jaccard distance, or [other metrics](http://finzi.psych.upenn.edu/library/st/html/st-metrics.html) from the [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) package (`stringdist_inner_join`)
 * A regular expression in one column matching to another (`regex_inner_join`)
 
-One relevant use case is for classifying freeform text data while allowing 
+One relevant use case is for classifying freeform text data (such as survey responses) against a finite set of options. 
 
 ### Example of `stringdist_inner_join`: Correcting misspellings against a dictionary
 
-Often you find yourself with a set of words that you want to combine with a dictionary.
+Often you find yourself with a set of words that you want to combine with a "dictionary"- it could be a literal dictionary (as in this case) or a domain-specific category system. But you want to allow for small differences in spelling or punctuation.
 
 The fuzzyjoin package comes with a set of common misspellings ([from Wikipedia](https://en.wikipedia.org/wiki/Wikipedia:Lists_of_common_misspellings/For_machines)):
 
