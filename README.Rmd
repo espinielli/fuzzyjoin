@@ -48,11 +48,14 @@ words
 
 As an example, we'll pick 1000 of these words (you could try it on all of them though), and use `stringdist_inner_join` to join them against our dictionary.
 
-```{r joined, dependson = "words"}
+```{r sub_misspellings}
 set.seed(2016)
+sub_misspellings <- misspellings %>%
+  sample_n(1000)
+```
 
-joined <- misspellings %>%
-  sample_n(1000) %>%
+```{r joined, dependson = c("words", "sub_misspellings")}
+joined <- sub_misspellings %>%
   stringdist_inner_join(words, by = c(misspelling = "word"), max_dist = 1)
 ```
 
@@ -76,7 +79,6 @@ which_correct <- joined %>%
   group_by(misspelling, correct) %>%
   summarize(guesses = n(), one_correct = any(correct == word))
 
-ggplot(which_correct)
 which_correct
 
 # percentage of guesses getting at least one right
@@ -86,7 +88,33 @@ mean(which_correct$n)
 sum(which_correct$guesses == 1 & which_correct$one_correct)
 ```
 
-Not bad. If we increase our distance threshold, we'll increase the fraction with a correct guess, but also get more false positive guesses.
+Not bad.
+
+Note that `regex_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `regex_left_join`:
+
+```{r left_joined, dependson = "misspellings"}
+left_joined <- sub_misspellings %>%
+  stringdist_left_join(words, by = c(misspelling = "word"), max_dist = 1)
+
+left_joined
+
+left_joined %>%
+  filter(is.na(word))
+```
+
+(To get *just* the ones without matches immediately, we could have used `regex_anti_join`). If we increase our distance threshold, we'll increase the fraction with a correct guess, but also get more false positive guesses:
+
+```{r left_joined2, dependson = "misspellings"}
+left_joined2 <- sub_misspellings %>%
+  stringdist_left_join(words, by = c(misspelling = "word"), max_dist = 2)
+
+left_joined2
+
+left_joined2 %>%
+  filter(is.na(word))
+```
+
+Most of the missing words here simply aren't in our dictionary.
 
 You can try other distance thresholds, other dictionaries, and other distance metrics (see [stringdist-metrics] for more). This function is especially useful on a domain-specific dataset, such as free-form survey input that is likely to be close to one of a handful of responses.
 
@@ -175,8 +203,6 @@ Other options for further analysis of this fuzzy-joined dataset include doing se
 ### Future Work
 
 A few things I'd like to work on:
-
-* **join operations besides inner**: I haven't implemented the `left_join`, `semi_join`, and `anti_join` equivalents. I see `left_join` as being especially important since you'll often also want to examine the words/passages/etc that *didn't* get matched.
 
 * **Shortcuts on string distance matching**: If two strings are more than 1 character apart in length, the method is `osa`, and `max_dist` is 1, you don't even need to compare them.
 

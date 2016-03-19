@@ -73,9 +73,13 @@ As an example, we'll pick 1000 of these words (you could try it on all of them t
 
 ```r
 set.seed(2016)
+sub_misspellings <- misspellings %>%
+  sample_n(1000)
+```
 
-joined <- misspellings %>%
-  sample_n(1000) %>%
+
+```r
+joined <- sub_misspellings %>%
   stringdist_inner_join(words, by = c(misspelling = "word"), max_dist = 1)
 ```
 
@@ -133,8 +137,6 @@ which_correct <- joined %>%
   group_by(misspelling, correct) %>%
   summarize(guesses = n(), one_correct = any(correct == word))
 
-ggplot(which_correct)
-#> Error in eval(expr, envir, enclos): could not find function "ggplot"
 which_correct
 #> Source: local data frame [457 x 4]
 #> Groups: misspelling [?]
@@ -162,7 +164,95 @@ sum(which_correct$guesses == 1 & which_correct$one_correct)
 #> [1] 296
 ```
 
-Not bad. If we increase our distance threshold, we'll increase the fraction with a correct guess, but also get more false positive guesses.
+Not bad.
+
+Note that `regex_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `regex_left_join`:
+
+
+```r
+left_joined <- sub_misspellings %>%
+  stringdist_left_join(words, by = c(misspelling = "word"), max_dist = 1)
+
+left_joined
+#> Source: local data frame [1,273 x 4]
+#> 
+#>      misspelling      correct        word syllables
+#>            (chr)        (chr)       (chr)     (dbl)
+#> 1    charasmatic  charismatic charismatic         4
+#> 2    breakthough breakthrough          NA        NA
+#> 3          sould       should       could         1
+#> 4          sould       should      should         1
+#> 5          sould       should        sold         1
+#> 6          sould       should        soul         1
+#> 7          sould       should       sound         1
+#> 8          sould       should       would         1
+#> 9    belligerant  belligerent          NA        NA
+#> 10 incoroporated incorporated          NA        NA
+#> ..           ...          ...         ...       ...
+
+left_joined %>%
+  filter(is.na(word))
+#> Source: local data frame [543 x 4]
+#> 
+#>      misspelling      correct  word syllables
+#>            (chr)        (chr) (chr)     (dbl)
+#> 1    breakthough breakthrough    NA        NA
+#> 2    belligerant  belligerent    NA        NA
+#> 3  incoroporated incorporated    NA        NA
+#> 4       baceause      because    NA        NA
+#> 5     occurences  occurrences    NA        NA
+#> 6    surveilence surveillance    NA        NA
+#> 7      abondoned    abandoned    NA        NA
+#> 8       alledges      alleges    NA        NA
+#> 9    deliberatly deliberately    NA        NA
+#> 10     sucession   succession    NA        NA
+#> ..           ...          ...   ...       ...
+```
+
+(To get *just* the ones without matches immediately, we could have used `regex_anti_join`). If we increase our distance threshold, we'll increase the fraction with a correct guess, but also get more false positive guesses:
+
+
+```r
+left_joined2 <- sub_misspellings %>%
+  stringdist_left_join(words, by = c(misspelling = "word"), max_dist = 2)
+
+left_joined2
+#> Source: local data frame [8,026 x 4]
+#> 
+#>    misspelling      correct        word syllables
+#>          (chr)        (chr)       (chr)     (dbl)
+#> 1  charasmatic  charismatic charismatic         4
+#> 2  breakthough breakthrough          NA        NA
+#> 3        sould       should        auld         1
+#> 4        sould       should        bold         1
+#> 5        sould       should       bound         1
+#> 6        sould       should        cold         1
+#> 7        sould       should       could         1
+#> 8        sould       should        fold         1
+#> 9        sould       should        foul         1
+#> 10       sould       should       found         1
+#> ..         ...          ...         ...       ...
+
+left_joined2 %>%
+  filter(is.na(word))
+#> Source: local data frame [274 x 4]
+#> 
+#>       misspelling       correct  word syllables
+#>             (chr)         (chr) (chr)     (dbl)
+#> 1     breakthough  breakthrough    NA        NA
+#> 2     belligerant   belligerent    NA        NA
+#> 3       abondoned     abandoned    NA        NA
+#> 4    correposding corresponding    NA        NA
+#> 5  archeaologists archeologists    NA        NA
+#> 6     emmediately   immediately    NA        NA
+#> 7      possessess     possesses    NA        NA
+#> 8        nuturing     nurturing    NA        NA
+#> 9       sucesfuly  successfully    NA        NA
+#> 10      piblisher     publisher    NA        NA
+#> ..            ...           ...   ...       ...
+```
+
+Most of the missing words here simply aren't in our dictionary.
 
 You can try other distance thresholds, other dictionaries, and other distance metrics (see [stringdist-metrics] for more). This function is especially useful on a domain-specific dataset, such as free-form survey input that is likely to be close to one of a handful of responses.
 
@@ -309,8 +399,6 @@ Other options for further analysis of this fuzzy-joined dataset include doing se
 ### Future Work
 
 A few things I'd like to work on:
-
-* **join operations besides inner**: I haven't implemented the `left_join`, `semi_join`, and `anti_join` equivalents. I see `left_join` as being especially important since you'll often also want to examine the words/passages/etc that *didn't* get matched.
 
 * **Shortcuts on string distance matching**: If two strings are more than 1 character apart in length, the method is `osa`, and `max_dist` is 1, you don't even need to compare them.
 
