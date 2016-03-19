@@ -10,6 +10,7 @@
 #' @param by Columns by which to join the two tables
 #' @param max_dist Maximum distance to use for joining
 #' @param ignore_case Whether to be case insensitive (default yes)
+#' @param mode One of "inner", "left", "right", "full" "semi", or "anti"
 #' @param ... Arguments passed on to \code{\link{stringdist}},
 #' most notably "method": see \code{stringdist-methods} in the
 #' stringdist package.
@@ -33,7 +34,9 @@
 #'  stringdist_inner_join(d, by = c(cut = "approximate_name"))
 #'
 #' @export
-stringdist_inner_join <- function(x, y, by = NULL, max_dist = 2, ignore_case = FALSE, ...) {
+stringdist_join <- function(x, y, by = NULL, max_dist = 2,
+                            mode = "inner",
+                            ignore_case = FALSE, ...) {
   match_fun <- function(v1, v2) {
     if (ignore_case) {
       v1 <- stringr::str_to_lower(v1)
@@ -44,5 +47,47 @@ stringdist_inner_join <- function(x, y, by = NULL, max_dist = 2, ignore_case = F
     dists <= max_dist
   }
 
-  fuzzy_inner_join(x, y, by = by, match_fun = match_fun)
+  fuzzy_join(x, y, by = by, mode = mode, match_fun = match_fun)
+}
+
+
+#' @rdname stringdist_join
+#' @export
+stringdist_inner_join <- function(x, y, by = NULL, ...) {
+  stringdist_join(x, y, by, mode = "inner", ...)
+}
+
+
+#' @rdname stringdist_join
+#' @export
+stringdist_left_join <- function(x, y, by = NULL, ...) {
+  stringdist_join(x, y, by, mode = "left", ...)
+}
+
+
+#' @rdname stringdist_join
+#' @export
+stringdist_right_join <- function(x, y, by = NULL, ...) {
+  stringdist_join(x, y, by, mode = "right", ...)
+}
+
+
+#' @rdname stringdist_join
+#' @export
+stringdist_full_join <- function(x, y, by = NULL, ...) {
+  stringdist_join(x, y, by, mode = "full", ...)
+}
+
+
+#' @rdname stringdist_join
+#' @export
+stringdist_semi_join <- function(x, y, by = NULL, ...) {
+  stringdist_join(x, y, by, mode = "semi", ...)
+}
+
+
+#' @rdname stringdist_join
+#' @export
+stringdist_anti_join <- function(x, y, by = NULL, ...) {
+  stringdist_join(x, y, by, mode = "anti", ...)
 }
