@@ -24,6 +24,15 @@ The package also includes:
   * `regex_anti_join` (filter left table for rows without matches)
 * A general wrapper (`fuzzy_join`) that allows you to define your own custom fuzzy matching function.
 
+### Installation
+
+Install from GitHub using [devtools](https://cran.r-project.org/web/packages/devtools/index.html):
+
+
+```r
+devtools::install_github("dgrtwo/fuzzyjoin")
+```
+
 ### Example of `stringdist_inner_join`: Correcting misspellings against a dictionary
 
 Often you find yourself with a set of words that you want to combine with a "dictionary"- it could be a literal dictionary (as in this case) or a domain-specific category system. But you want to allow for small differences in spelling or punctuation.
