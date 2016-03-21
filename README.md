@@ -278,22 +278,27 @@ You can try other distance thresholds, other dictionaries, and other distance me
 
 ### Example of `regex_inner_join`: Classifying text based on regular expressions
 
-Consider the book Pride and Prejudice, by Jane Austen (retrieved from [Project Gutenberg](https://www.gutenberg.org/) and provided as an extra dataset in `extdata`). We could split the books up into "passages" of 50 lines each.
+Consider the book Pride and Prejudice, by Jane Austen, which we can access through the `janeaustenr` package. Note that you'll have to first install it with:
+
+
+```r
+devtools::install_github("juliasilge/janeaustenr")
+```
+
+We could split the books up into "passages" of 50 lines each.
 
 
 ```r
 library(dplyr)
 library(stringr)
+library(janeaustenr)
 
-f <- system.file("extdata", "pride_and_prejudice.txt.zip", package = "fuzzyjoin")
-lines <- readLines(unz(f, "pride_and_prejudice.txt"))
-
-passages <- data_frame(text = lines) %>%
+passages <- data_frame(text = prideprejudice) %>%
   group_by(passage = 1 + row_number() %/% 50) %>%
   summarize(text = paste(text, collapse = " "))
 
 passages
-#> Source: local data frame [268 x 2]
+#> Source: local data frame [215 x 2]
 #> 
 #>    passage
 #>      (dbl)
@@ -350,20 +355,20 @@ This combines the two data frames based on cases where the `passages$text` colum
 ```r
 character_passages %>%
   select(passage, character, text)
-#> Source: local data frame [1,122 x 3]
+#> Source: local data frame [1,015 x 3]
 #> 
 #>    passage       character
 #>      (dbl)           (chr)
 #> 1        1      Mr. Bennet
-#> 2        2      Mr. Bennet
-#> 3        2            Jane
-#> 4        2           Lydia
-#> 5        2 Charlotte Lucas
-#> 6        3       Elizabeth
-#> 7        3      Mr. Bennet
-#> 8        3     Mrs. Bennet
-#> 9        3           Kitty
-#> 10       4      Mr. Bennet
+#> 2        1            Jane
+#> 3        1 Charlotte Lucas
+#> 4        2       Elizabeth
+#> 5        2      Mr. Bennet
+#> 6        2     Mrs. Bennet
+#> 7        2            Jane
+#> 8        2           Lydia
+#> 9        3      Mr. Bennet
+#> 10       3     Mrs. Bennet
 #> ..     ...             ...
 #> Variables not shown: text (chr)
 ```
@@ -380,20 +385,20 @@ character_passages %>%
 #> 
 #>                   character     n
 #>                       (chr) (int)
-#> 1                 Elizabeth   229
-#> 2                     Darcy   162
-#> 3                      Jane   134
-#> 4                   Wickham    89
-#> 5               Mrs. Bennet    87
-#> 6                     Lydia    79
-#> 7               Mr. Collins    73
-#> 8           Charlotte Lucas    68
-#> 9                Mr. Bennet    51
-#> 10                    Kitty    42
-#> 11            Mrs. Gardiner    32
-#> 12 Lady Catherine de Bourgh    27
-#> 13             Mr. Gardiner    25
-#> 14                     Mary    24
+#> 1                 Elizabeth   194
+#> 2                     Darcy   137
+#> 3                      Jane   122
+#> 4                   Wickham    82
+#> 5               Mrs. Bennet    79
+#> 6                     Lydia    72
+#> 7               Mr. Collins    70
+#> 8           Charlotte Lucas    60
+#> 9                Mr. Bennet    52
+#> 10                    Kitty    39
+#> 11            Mrs. Gardiner    33
+#> 12 Lady Catherine de Bourgh    26
+#> 13             Mr. Gardiner    26
+#> 14                     Mary    23
 ```
 
 The data is also well suited to discover which characters appear in scenes together, and to cluster them to find groupings of characters (like in [this analysis]).

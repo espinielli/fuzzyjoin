@@ -139,16 +139,20 @@ You can try other distance thresholds, other dictionaries, and other distance me
 
 ### Example of `regex_inner_join`: Classifying text based on regular expressions
 
-Consider the book Pride and Prejudice, by Jane Austen (retrieved from [Project Gutenberg](https://www.gutenberg.org/) and provided as an extra dataset in `extdata`). We could split the books up into "passages" of 50 lines each.
+Consider the book Pride and Prejudice, by Jane Austen, which we can access through the `janeaustenr` package. Note that you'll have to first install it with:
+
+```{r eval = FALSE}
+devtools::install_github("juliasilge/janeaustenr")
+```
+
+We could split the books up into "passages" of 50 lines each.
 
 ```{r passages}
 library(dplyr)
 library(stringr)
+library(janeaustenr)
 
-f <- system.file("extdata", "pride_and_prejudice.txt.zip", package = "fuzzyjoin")
-lines <- readLines(unz(f, "pride_and_prejudice.txt"))
-
-passages <- data_frame(text = lines) %>%
+passages <- data_frame(text = prideprejudice) %>%
   group_by(passage = 1 + row_number() %/% 50) %>%
   summarize(text = paste(text, collapse = " "))
 
