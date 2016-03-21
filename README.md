@@ -5,13 +5,24 @@
 fuzzyjoin: Join data frames on inexact matching
 ------------------
 
-The fuzzyjoin package is a variation on dplyr's [join](http://www.inside-r.org/node/230646) operations that allows matching not just on values that match between columns, but on inexact matching. This includes:
+The fuzzyjoin package is a variation on dplyr's [join](http://www.inside-r.org/node/230646) operations that allows matching not just on values that match between columns, but on inexact matching. This allows matching on:
 
 * Numeric values that are within some distance (`difference_inner_join`)
 * Strings that are similiar in Levenshtein/cosine/Jaccard distance, or [other metrics](http://finzi.psych.upenn.edu/library/st/html/st-metrics.html) from the [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) package (`stringdist_inner_join`)
 * A regular expression in one column matching to another (`regex_inner_join`)
 
-One relevant use case is for classifying freeform text data (such as survey responses) against a finite set of options. 
+One relevant use case is for classifying freeform text data (such as survey responses) against a finite set of options.
+
+The package also includes:
+
+* For each of `regex_`, `stringdist_`, and `difference_`, variations for the six dplyr "join" operations- for example,
+  * `regex_inner_join` (include only rows with matches in each)
+  * `regex_left_join` (include all rows of left table)
+  * `regex_right_join` (include all rows of right table)
+  * `regex_full_join` (include all rows in each table)
+  * `regex_semi_join` (filter left table for rows with matches)
+  * `regex_anti_join` (filter left table for rows without matches)
+* A general wrapper (`fuzzy_join`) that allows you to define your own custom fuzzy matching function.
 
 ### Example of `stringdist_inner_join`: Correcting misspellings against a dictionary
 
@@ -26,7 +37,7 @@ library(fuzzyjoin)
 data(misspellings)
 
 misspellings
-#> Source: local data frame [4,508 x 2]
+#> Source: local data frame [4,505 x 2]
 #> 
 #>    misspelling    correct
 #>          (chr)      (chr)
@@ -88,21 +99,21 @@ By default, `stringdist_inner_join` uses optimal string alignment (Damerau–Lev
 
 ```r
 joined
-#> Source: local data frame [730 x 4]
+#> Source: local data frame [728 x 4]
 #> 
-#>    misspelling     correct        word syllables
-#>          (chr)       (chr)       (chr)     (dbl)
-#> 1  charasmatic charismatic charismatic         4
-#> 2        sould      should       could         1
-#> 3        sould      should      should         1
-#> 4        sould      should        sold         1
-#> 5        sould      should        soul         1
-#> 6        sould      should       sound         1
-#> 7        sould      should       would         1
-#> 8        fiels       feels       field         1
-#> 9        fiels       feels        fils         1
-#> 10    conscent     consent     consent         2
-#> ..         ...         ...         ...       ...
+#>    misspelling correct    word syllables
+#>          (chr)   (chr)   (chr)     (dbl)
+#> 1        sould  should   could         1
+#> 2        sould  should  should         1
+#> 3        sould  should    sold         1
+#> 4        sould  should    soul         1
+#> 5        sould  should   sound         1
+#> 6        sould  should   would         1
+#> 7        fiels   feels   field         1
+#> 8        fiels   feels    fils         1
+#> 9     conscent consent consent         2
+#> 10       fleed   freed   bleed         1
+#> ..         ...     ...     ...       ...
 ```
 
 Note that there are some redundancies; words that could be multiple items in the dictionary. These end up with one row per "guess" in the output. How many words did we classify?
@@ -111,7 +122,7 @@ Note that there are some redundancies; words that could be multiple items in the
 ```r
 joined %>%
   count(misspelling, correct)
-#> Source: local data frame [457 x 3]
+#> Source: local data frame [455 x 3]
 #> Groups: misspelling [?]
 #> 
 #>    misspelling      correct     n
@@ -138,7 +149,7 @@ which_correct <- joined %>%
   summarize(guesses = n(), one_correct = any(correct == word))
 
 which_correct
-#> Source: local data frame [457 x 4]
+#> Source: local data frame [455 x 4]
 #> Groups: misspelling [?]
 #> 
 #>    misspelling      correct guesses one_correct
@@ -156,17 +167,17 @@ which_correct
 #> ..         ...          ...     ...         ...
 
 # percentage of guesses getting at least one right
-mean(which_correct$n)
-#> Error: Unknown name
+mean(which_correct$one_correct)
+#> [1] 0.8527473
 
 # number uniquely correct (out of the original 1000)
 sum(which_correct$guesses == 1 & which_correct$one_correct)
-#> [1] 296
+#> [1] 294
 ```
 
 Not bad.
 
-Note that `regex_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `regex_left_join`:
+Note that `stringdist_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `stringdiststringdist_left_join`:
 
 
 ```r
@@ -176,40 +187,40 @@ left_joined <- sub_misspellings %>%
 left_joined
 #> Source: local data frame [1,273 x 4]
 #> 
-#>      misspelling      correct        word syllables
-#>            (chr)        (chr)       (chr)     (dbl)
-#> 1    charasmatic  charismatic charismatic         4
-#> 2    breakthough breakthrough          NA        NA
-#> 3          sould       should       could         1
-#> 4          sould       should      should         1
-#> 5          sould       should        sold         1
-#> 6          sould       should        soul         1
-#> 7          sould       should       sound         1
-#> 8          sould       should       would         1
-#> 9    belligerant  belligerent          NA        NA
-#> 10 incoroporated incorporated          NA        NA
-#> ..           ...          ...         ...       ...
+#>     misspelling      correct   word syllables
+#>           (chr)        (chr)  (chr)     (dbl)
+#> 1    charactors   characters     NA        NA
+#> 2    Brasillian    Brazilian     NA        NA
+#> 3         sould       should  could         1
+#> 4         sould       should should         1
+#> 5         sould       should   sold         1
+#> 6         sould       should   soul         1
+#> 7         sould       should  sound         1
+#> 8         sould       should  would         1
+#> 9   belligerant  belligerent     NA        NA
+#> 10 incorportaed incorporated     NA        NA
+#> ..          ...          ...    ...       ...
 
 left_joined %>%
   filter(is.na(word))
-#> Source: local data frame [543 x 4]
+#> Source: local data frame [545 x 4]
 #> 
-#>      misspelling      correct  word syllables
-#>            (chr)        (chr) (chr)     (dbl)
-#> 1    breakthough breakthrough    NA        NA
-#> 2    belligerant  belligerent    NA        NA
-#> 3  incoroporated incorporated    NA        NA
-#> 4       baceause      because    NA        NA
-#> 5     occurences  occurrences    NA        NA
-#> 6    surveilence surveillance    NA        NA
-#> 7      abondoned    abandoned    NA        NA
-#> 8       alledges      alleges    NA        NA
-#> 9    deliberatly deliberately    NA        NA
-#> 10     sucession   succession    NA        NA
-#> ..           ...          ...   ...       ...
+#>     misspelling      correct  word syllables
+#>           (chr)        (chr) (chr)     (dbl)
+#> 1    charactors   characters    NA        NA
+#> 2    Brasillian    Brazilian    NA        NA
+#> 3   belligerant  belligerent    NA        NA
+#> 4  incorportaed incorporated    NA        NA
+#> 5          awya         away    NA        NA
+#> 6      occuring    occurring    NA        NA
+#> 7   surveilence surveillance    NA        NA
+#> 8     abondoned    abandoned    NA        NA
+#> 9      alledges      alleges    NA        NA
+#> 10  deliberatly deliberately    NA        NA
+#> ..          ...          ...   ...       ...
 ```
 
-(To get *just* the ones without matches immediately, we could have used `regex_anti_join`). If we increase our distance threshold, we'll increase the fraction with a correct guess, but also get more false positive guesses:
+(To get *just* the ones without matches immediately, we could have used `stringdist_anti_join`). If we increase our distance threshold, we'll increase the fraction with a correct guess, but also get more false positive guesses:
 
 
 ```r
@@ -217,39 +228,39 @@ left_joined2 <- sub_misspellings %>%
   stringdist_left_join(words, by = c(misspelling = "word"), max_dist = 2)
 
 left_joined2
-#> Source: local data frame [8,026 x 4]
+#> Source: local data frame [7,691 x 4]
 #> 
-#>    misspelling      correct        word syllables
-#>          (chr)        (chr)       (chr)     (dbl)
-#> 1  charasmatic  charismatic charismatic         4
-#> 2  breakthough breakthrough          NA        NA
-#> 3        sould       should        auld         1
-#> 4        sould       should        bold         1
-#> 5        sould       should       bound         1
-#> 6        sould       should        cold         1
-#> 7        sould       should       could         1
-#> 8        sould       should        fold         1
-#> 9        sould       should        foul         1
-#> 10       sould       should       found         1
-#> ..         ...          ...         ...       ...
+#>    misspelling    correct       word syllables
+#>          (chr)      (chr)      (chr)     (dbl)
+#> 1   charactors characters  character         3
+#> 2   charactors characters charactery         4
+#> 3   Brasillian  Brazilian         NA        NA
+#> 4        sould     should       auld         1
+#> 5        sould     should       bold         1
+#> 6        sould     should      bound         1
+#> 7        sould     should       cold         1
+#> 8        sould     should      could         1
+#> 9        sould     should       fold         1
+#> 10       sould     should       foul         1
+#> ..         ...        ...        ...       ...
 
 left_joined2 %>%
   filter(is.na(word))
-#> Source: local data frame [274 x 4]
+#> Source: local data frame [264 x 4]
 #> 
-#>       misspelling       correct  word syllables
-#>             (chr)         (chr) (chr)     (dbl)
-#> 1     breakthough  breakthrough    NA        NA
-#> 2     belligerant   belligerent    NA        NA
-#> 3       abondoned     abandoned    NA        NA
-#> 4    correposding corresponding    NA        NA
-#> 5  archeaologists archeologists    NA        NA
-#> 6     emmediately   immediately    NA        NA
-#> 7      possessess     possesses    NA        NA
-#> 8        nuturing     nurturing    NA        NA
-#> 9       sucesfuly  successfully    NA        NA
-#> 10      piblisher     publisher    NA        NA
-#> ..            ...           ...   ...       ...
+#>      misspelling       correct  word syllables
+#>            (chr)         (chr) (chr)     (dbl)
+#> 1     Brasillian     Brazilian    NA        NA
+#> 2    belligerant   belligerent    NA        NA
+#> 3       occuring     occurring    NA        NA
+#> 4      abondoned     abandoned    NA        NA
+#> 5   correponding corresponding    NA        NA
+#> 6  archeaologist archaeologist    NA        NA
+#> 7    emmediately   immediately    NA        NA
+#> 8     possessess     possesses    NA        NA
+#> 9        unahppy       unhappy    NA        NA
+#> 10        Guilio        Giulio    NA        NA
+#> ..           ...           ...   ...       ...
 ```
 
 Most of the missing words here simply aren't in our dictionary.
@@ -288,7 +299,7 @@ passages
 #> 9        9
 #> 10      10
 #> ..     ...
-#> Variables not shown: text (chr).
+#> Variables not shown: text (chr)
 ```
 
 Suppose we wanted to divide the passages based on which character's name is mentioned in each. Character's names may differ in how they are presented, so we construct a regular expression for each and pair it with that character's name.
@@ -345,7 +356,7 @@ character_passages %>%
 #> 9        3           Kitty
 #> 10       4      Mr. Bennet
 #> ..     ...             ...
-#> Variables not shown: text (chr).
+#> Variables not shown: text (chr)
 ```
 
 This shows that Mr. Bennet's name appears in passages 1, 2, 4, and 6, while Charlotte Lucas's appears in 3. Notice that having fuzzy-joined the datasets, some passages will end up duplicated (those with multiple names in them), while it's possible others will be missing entirely (those without names).
@@ -392,7 +403,7 @@ h <- hclust(dist(passage_character_matrix, method = "manhattan"))
 plot(h)
 ```
 
-![plot of chunk character_passages_matrix](README-fig/character_passages_matrix-1.png) 
+![plot of chunk character_passages_matrix](README-fig/character_passages_matrix-1.png)
 
 Other options for further analysis of this fuzzy-joined dataset include doing sentiment analysis on text surrounding each character's name, [similar to Julia Silge's analysis here](http://juliasilge.com/blog/You-Must-Allow-Me/).
 

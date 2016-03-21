@@ -15,13 +15,24 @@ knitr::opts_chunk$set(
 fuzzyjoin: Join data frames on inexact matching
 ------------------
 
-The fuzzyjoin package is a variation on dplyr's [join](http://www.inside-r.org/node/230646) operations that allows matching not just on values that match between columns, but on inexact matching. This includes:
+The fuzzyjoin package is a variation on dplyr's [join](http://www.inside-r.org/node/230646) operations that allows matching not just on values that match between columns, but on inexact matching. This allows matching on:
 
 * Numeric values that are within some distance (`difference_inner_join`)
 * Strings that are similiar in Levenshtein/cosine/Jaccard distance, or [other metrics](http://finzi.psych.upenn.edu/library/st/html/st-metrics.html) from the [stringdist](https://cran.r-project.org/web/packages/stringdist/index.html) package (`stringdist_inner_join`)
 * A regular expression in one column matching to another (`regex_inner_join`)
 
-One relevant use case is for classifying freeform text data (such as survey responses) against a finite set of options. 
+One relevant use case is for classifying freeform text data (such as survey responses) against a finite set of options.
+
+The package also includes:
+
+* For each of `regex_`, `stringdist_`, and `difference_`, variations for the six dplyr "join" operations- for example,
+  * `regex_inner_join` (include only rows with matches in each)
+  * `regex_left_join` (include all rows of left table)
+  * `regex_right_join` (include all rows of right table)
+  * `regex_full_join` (include all rows in each table)
+  * `regex_semi_join` (filter left table for rows with matches)
+  * `regex_anti_join` (filter left table for rows without matches)
+* A general wrapper (`fuzzy_join`) that allows you to define your own custom fuzzy matching function.
 
 ### Example of `stringdist_inner_join`: Correcting misspellings against a dictionary
 
@@ -82,7 +93,7 @@ which_correct <- joined %>%
 which_correct
 
 # percentage of guesses getting at least one right
-mean(which_correct$n)
+mean(which_correct$one_correct)
 
 # number uniquely correct (out of the original 1000)
 sum(which_correct$guesses == 1 & which_correct$one_correct)
@@ -90,7 +101,7 @@ sum(which_correct$guesses == 1 & which_correct$one_correct)
 
 Not bad.
 
-Note that `regex_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `regex_left_join`:
+Note that `stringdist_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `stringdiststringdist_left_join`:
 
 ```{r left_joined, dependson = "misspellings"}
 left_joined <- sub_misspellings %>%
@@ -102,7 +113,7 @@ left_joined %>%
   filter(is.na(word))
 ```
 
-(To get *just* the ones without matches immediately, we could have used `regex_anti_join`). If we increase our distance threshold, we'll increase the fraction with a correct guess, but also get more false positive guesses:
+(To get *just* the ones without matches immediately, we could have used `stringdist_anti_join`). If we increase our distance threshold, we'll increase the fraction with a correct guess, but also get more false positive guesses:
 
 ```{r left_joined2, dependson = "misspellings"}
 left_joined2 <- sub_misspellings %>%

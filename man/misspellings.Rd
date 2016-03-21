@@ -5,7 +5,7 @@
 \alias{misspellings}
 \title{A corpus of common misspellings, for examples and
 practice}
-\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 4508 rows and 2 columns.}
+\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 4505 rows and 2 columns.}
 \source{
 \url{https://en.wikipedia.org/wiki/Wikipedia:Lists_of_common_misspellings/For_machines}
 }
@@ -14,8 +14,10 @@ misspellings
 }
 \description{
 This is a code{tbl_df} mapping misspellings of their words, compiled by
-Wikipedia (from whom it is licensed under the CC-BY SA license.
-If you'd like to reproduce this dataset from Wikipedia, see the examples.
+Wikipedia, where it is licensed under the CC-BY SA license.
+(Three words with non-ASCII characters were filtered out).
+If you'd like to reproduce this dataset from Wikipedia, see the example
+code below.
 }
 \examples{
 
@@ -34,7 +36,8 @@ misspellings <- h \%>\%
   readr::read_delim(col_names = c("misspelling", "correct"), delim = ">",
                     skip = 1) \%>\%
   mutate(misspelling = str_sub(misspelling, 1, -2)) \%>\%
-  unnest(correct = str_split(correct, ", "))
+  unnest(correct = str_split(correct, ", ")) \%>\%
+  filter(Encoding(correct) != "UTF-8")
 
 }
 \keyword{datasets}
