@@ -23,6 +23,13 @@ test_that("stringdist_inner_join works on a large df with multiples in each", {
   expect_equal(sum(j$cut == "Very Good"), sum(diamonds$cut == "Very Good") * 2)
   expect_equal(sum(j$cut2 == "Premiom"), sum(diamonds$cut == "Premium"))
 
+  vg <- j %>%
+    filter(cut == "Very Good") %>%
+    count(type)
+
+  expect_equal(vg$type, c(4, 5))
+  expect_equal(vg$n, rep(sum(diamonds$cut == "Very Good"), 2))
+
   expect_true(all(j$type[j$cut == "Faiir"] == 1))
 })
 
@@ -102,6 +109,37 @@ test_that("stringdist_anti_join works as expected", {
   expect_equal(sort(as.character(unique(result$cut))), notin)
 
   expect_equal(nrow(result), sum(result$cut %in% notin))
+})
+
+
+test_that("stringdist_inner_join works with multiple match functions", {
+  # setup
+  d3 <- data_frame(cut2 = c("Idea", "Premiums", "Premiom",
+                           "VeryGood", "VeryGood", "Faiir"),
+                   carat2 = c(0, .5, 1, 1.5, 2, 2.5)) %>%
+    mutate(type = row_number())
+
+  sdist <- function(s1, s2) stringdist::stringdist(s1, s2) <= 1
+  ndist <- function(n1, n2) abs(n1 - n2) < .25
+
+  j <- diamonds %>%
+    fuzzy_inner_join(d3, by = c(cut = "cut2", carat = "carat2"),
+                     match_fun = list(sdist, ndist))
+
+  result <- j %>%
+    count(cut, cut2)
+
+  expect_equal(as.character(result$cut), c("Fair", "Very Good", "Premium", "Premium", "Ideal"))
+  expect_equal(result$cut2, c("Faiir", "VeryGood", "Premiom", "Premiums", "Idea"))
+
+  expect_less_than(max(abs(j$carat - j$carat2)), .25)
+
+  # give match_fun as a named list
+  j_named <- diamonds %>%
+    fuzzy_inner_join(d3, by = c(cut = "cut2", carat = "carat2"),
+                     match_fun = list(carat = ndist, cut = sdist))
+
+  expect_equal(j, j_named)
 })
 
 

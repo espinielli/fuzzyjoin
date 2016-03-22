@@ -9,8 +9,9 @@
 #' @param by Columns of each to join
 #' @param match_fun Vectorized function given two columns, returning
 #' TRUE or FALSE as to whether they are a match. Can be a list of functions
-#' one for each pair of columns specified in \code{by}. If only one function
-#' is given it is used on all column pairs.
+#' one for each pair of columns specified in \code{by} (if a named list, it
+#' uses the names in x).
+#' If only one function is given it is used on all column pairs.
 #' @param mode One of "inner", "left", "right", "full" "semi", or "anti"
 #' @param ... Extra arguments passed to match_fun
 #'
@@ -24,7 +25,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun,
   by <- common_by(by, x, y)
 
   if (length(match_fun) == 1){
-    match_fun <- rep(c(match_fun),length(by$x))
+    match_fun <- rep(c(match_fun), length(by$x))
   }
   if (length(match_fun) != length(by$x)){
     stop("Length of match_fun not equal to columns specified in 'by'.", call. = FALSE)
@@ -46,7 +47,15 @@ fuzzy_join <- function(x, y, by = NULL, match_fun,
 
     u_x <- indices_x$col
     u_y <- indices_y$col
-    m <- outer(u_x, u_y, match_fun[[i]], ...)
+
+    if (!is.null(names(match_fun))) {
+      # match_fun is a named list, use the names in x
+      mf <- match_fun[[by$x[[i]]]]
+    } else {
+      mf <- match_fun[[i]]
+    }
+
+    m <- outer(u_x, u_y, mf, ...)
 
     # return as a data frame of x and y indices that match
     w <- which(m) - 1
@@ -65,7 +74,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun,
     yls <- purrr::map_dbl(y_indices_l, length)
 
     x_rep <- unlist(purrr::map2(x_indices_l, yls, function(x, y) rep(x, each = y)))
-    y_rep <- unlist(purrr::map2(y_indices_l, xls, function(y, x) rep(y, each = x)))
+    y_rep <- unlist(purrr::map2(y_indices_l, xls, function(y, x) rep(y, x)))
 
     dplyr::data_frame(i = i, x = x_rep, y = y_rep)
   }))
