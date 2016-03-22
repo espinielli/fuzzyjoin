@@ -33,7 +33,10 @@ fuzzy_anti_join(x, y, by = NULL, match_fun, ...)
 \item{by}{Columns of each to join}
 
 \item{match_fun}{Vectorized function given two columns, returning
-TRUE or FALSE as to whether they are a match}
+TRUE or FALSE as to whether they are a match. Can be a list of functions
+one for each pair of columns specified in \code{by} (if a named list, it
+uses the names in x).
+If only one function is given it is used on all column pairs.}
 
 \item{mode}{One of "inner", "left", "right", "full" "semi", or "anti"}
 

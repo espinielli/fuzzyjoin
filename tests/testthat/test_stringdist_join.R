@@ -23,6 +23,13 @@ test_that("stringdist_inner_join works on a large df with multiples in each", {
   expect_equal(sum(j$cut == "Very Good"), sum(diamonds$cut == "Very Good") * 2)
   expect_equal(sum(j$cut2 == "Premiom"), sum(diamonds$cut == "Premium"))
 
+  vg <- j %>%
+    filter(cut == "Very Good") %>%
+    count(type)
+
+  expect_equal(vg$type, c(4, 5))
+  expect_equal(vg$n, rep(sum(diamonds$cut == "Very Good"), 2))
+
   expect_true(all(j$type[j$cut == "Faiir"] == 1))
 })
 
@@ -102,4 +109,72 @@ test_that("stringdist_anti_join works as expected", {
   expect_equal(sort(as.character(unique(result$cut))), notin)
 
   expect_equal(nrow(result), sum(result$cut %in% notin))
+})
+
+
+test_that("stringdist_inner_join works with multiple match functions", {
+  # setup
+  d3 <- data_frame(cut2 = c("Idea", "Premiums", "Premiom",
+                           "VeryGood", "VeryGood", "Faiir"),
+                   carat2 = c(0, .5, 1, 1.5, 2, 2.5)) %>%
+    mutate(type = row_number())
+
+  sdist <- function(s1, s2) stringdist::stringdist(s1, s2) <= 1
+  ndist <- function(n1, n2) abs(n1 - n2) < .25
+
+  j <- diamonds %>%
+    fuzzy_inner_join(d3, by = c(cut = "cut2", carat = "carat2"),
+                     match_fun = list(sdist, ndist))
+
+  result <- j %>%
+    count(cut, cut2)
+
+  expect_equal(as.character(result$cut), c("Fair", "Very Good", "Premium", "Premium", "Ideal"))
+  expect_equal(result$cut2, c("Faiir", "VeryGood", "Premiom", "Premiums", "Idea"))
+
+  expect_less_than(max(abs(j$carat - j$carat2)), .25)
+
+  # give match_fun as a named list
+  j_named <- diamonds %>%
+    fuzzy_inner_join(d3, by = c(cut = "cut2", carat = "carat2"),
+                     match_fun = list(carat = ndist, cut = sdist))
+
+  expect_equal(j, j_named)
+})
+
+
+test_that("stringdist_join works with data frames without matches", {
+  d <- data_frame(cut2 = c("Ideolll", "Premiumsss", "Premiomzzz",
+                           "VeryVeryGood", "VeryVeryGood", "FaiirsFair")) %>%
+    mutate(type = row_number())
+
+  j1 <- stringdist_inner_join(diamonds, d, by = c(cut = "cut2"))
+  expect_equal(nrow(j1), 0)
+  expect_true(all(c("carat", "cut", "cut2", "type") %in% colnames(j1)))
+
+  j2 <- stringdist_left_join(diamonds, d, by = c(cut = "cut2"))
+  expect_equal(nrow(j2), nrow(diamonds))
+  expect_true(all(is.na(j2$cut2)))
+
+  j3 <- stringdist_right_join(diamonds, d, by = c(cut = "cut2"))
+  expect_equal(nrow(j3), nrow(d))
+  expect_true(all(is.na(j3$carat)))
+  expect_true(all(is.na(j3$cut)))
+
+  j4 <- stringdist_full_join(diamonds, d, by = c(cut = "cut2"))
+  expect_equal(nrow(j4), nrow(diamonds), nrow(d))
+  expect_true(all(is.na(j4$cut) | is.na(j4$cut2)))
+  expect_true(all(is.na(j4$carat) | is.na(j4$type)))
+
+  j5 <- stringdist_semi_join(diamonds, d, by = c(cut = "cut2"))
+  expect_equal(nrow(j5), 0)
+  expect_true(!("cut2" %in% colnames(diamonds)))
+  expect_true(!("type" %in% colnames(diamonds)))
+  expect_true("cut" %in% colnames(diamonds))
+  expect_true("carat" %in% colnames(diamonds))
+
+  j6 <- stringdist_anti_join(diamonds, d, by = c(cut = "cut2"))
+  expect_equal(nrow(j6), nrow(diamonds))
+  expect_true("cut" %in% colnames(diamonds))
+  expect_true(!("cut2" %in% colnames(diamonds)))
 })
