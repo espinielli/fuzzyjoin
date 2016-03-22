@@ -41,6 +41,13 @@ fuzzy_join <- function(x, y, by = NULL, match_fun,
 
     # return as a data frame of x and y indices that match
     w <- which(m) - 1
+
+    if (length(w) == 0) {
+      # there are no matches
+      ret <- dplyr::data_frame(i = numeric(0), x = numeric(0), y = numeric(0))
+      return(ret)
+    }
+
     n_x <- length(u_x)
     x_indices_l <- indices_x$indices[w %% n_x + 1]
     y_indices_l <- indices_y$indices[w %/% n_x + 1]
@@ -67,6 +74,9 @@ fuzzy_join <- function(x, y, by = NULL, match_fun,
     return(x[sort(unique(matches$x)), ])
   }
   if (mode == "anti") {
+    if (nrow(matches) == 0) {
+      return(x)
+    }
     # just use the x indices to exclude
     return(x[-sort(unique(matches$x)), ])
   }
