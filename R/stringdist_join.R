@@ -10,10 +10,14 @@
 #' @param by Columns by which to join the two tables
 #' @param max_dist Maximum distance to use for joining
 #' @param ignore_case Whether to be case insensitive (default yes)
+#' @param method Method for computing string distance, see
+#' \code{stringdist-methods} in the stringdist package.
 #' @param mode One of "inner", "left", "right", "full" "semi", or "anti"
-#' @param ... Arguments passed on to \code{\link{stringdist}},
-#' most notably "method": see \code{stringdist-methods} in the
-#' stringdist package.
+#' @param ... Arguments passed on to \code{\link{stringdist}}
+#'
+#' @details If \code{method = "soundex"}, the \code{max_dist} is
+#' automatically set to 0.5, since soundex returns either a 0 (match)
+#' or a 1 (no match).
 #'
 #' @examples
 #'
@@ -35,15 +39,21 @@
 #'
 #' @export
 stringdist_join <- function(x, y, by = NULL, max_dist = 2,
-                            mode = "inner",
+                            method = "osa", mode = "inner",
                             ignore_case = FALSE, ...) {
+  if (method == "soundex") {
+    # soundex always returns 0 or 1, so any other max_dist would
+    # lead either to always matching or never matching
+    max_dist <- .5
+  }
+
   match_fun <- function(v1, v2) {
     if (ignore_case) {
       v1 <- stringr::str_to_lower(v1)
       v2 <- stringr::str_to_lower(v2)
     }
 
-    dists <- stringdist::stringdist(v1, v2, ...)
+    dists <- stringdist::stringdist(v1, v2, method = method, ...)
     dists <= max_dist
   }
 

@@ -10,8 +10,8 @@
 \alias{stringdist_semi_join}
 \title{Join two tables based on fuzzy string matching of their columns}
 \usage{
-stringdist_join(x, y, by = NULL, max_dist = 2, mode = "inner",
-  ignore_case = FALSE, ...)
+stringdist_join(x, y, by = NULL, max_dist = 2, method = "osa",
+  mode = "inner", ignore_case = FALSE, ...)
 
 stringdist_inner_join(x, y, by = NULL, ...)
 
@@ -34,19 +34,25 @@ stringdist_anti_join(x, y, by = NULL, ...)
 
 \item{max_dist}{Maximum distance to use for joining}
 
+\item{method}{Method for computing string distance, see
+\code{stringdist-methods} in the stringdist package.}
+
 \item{mode}{One of "inner", "left", "right", "full" "semi", or "anti"}
 
 \item{ignore_case}{Whether to be case insensitive (default yes)}
 
-\item{...}{Arguments passed on to \code{\link{stringdist}},
-most notably "method": see \code{stringdist-methods} in the
-stringdist package.}
+\item{...}{Arguments passed on to \code{\link{stringdist}}}
 }
 \description{
 Join two tables based on fuzzy string matching of their columns.
 This is useful, for example, in matching free-form inputs in
 a survey or online form, where it can catch misspellings and
 small personal changes.
+}
+\details{
+If \code{method = "soundex"}, the \code{max_dist} is
+automatically set to 0.5, since soundex returns either a 0 (match)
+or a 1 (no match).
 }
 \examples{
 
