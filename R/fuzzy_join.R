@@ -8,7 +8,9 @@
 #' @param y A tbl
 #' @param by Columns of each to join
 #' @param match_fun Vectorized function given two columns, returning
-#' TRUE or FALSE as to whether they are a match
+#' TRUE or FALSE as to whether they are a match. Can be a list of functions
+#' one for each pair of columns specified in \code{by}. If only one function
+#' is given it is used on all column pairs.
 #' @param mode One of "inner", "left", "right", "full" "semi", or "anti"
 #' @param ... Extra arguments passed to match_fun
 #'
@@ -20,6 +22,13 @@ fuzzy_join <- function(x, y, by = NULL, match_fun,
   mode <- match.arg(mode, c("inner", "left", "right", "full", "semi", "anti"))
 
   by <- common_by(by, x, y)
+
+  if (length(match_fun) == 1){
+    match_fun <- rep(c(match_fun),length(by$x))
+  }
+  if (length(match_fun) != length(by$x)){
+    stop("Length of match_fun not equal to columns specified in 'by'.")
+  }
 
   matches <- dplyr::bind_rows(lapply(seq_along(by$x), function(i) {
     col_x <- x[[by$x[i]]]
@@ -37,7 +46,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun,
 
     u_x <- indices_x$col
     u_y <- indices_y$col
-    m <- outer(u_x, u_y, match_fun, ...)
+    m <- outer(u_x, u_y, match_fun[[i]], ...)
 
     # return as a data frame of x and y indices that match
     w <- which(m) - 1
