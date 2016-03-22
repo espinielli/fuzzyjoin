@@ -27,7 +27,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun,
     match_fun <- rep(c(match_fun),length(by$x))
   }
   if (length(match_fun) != length(by$x)){
-    stop("Length of match_fun not equal to columns specified in 'by'.")
+    stop("Length of match_fun not equal to columns specified in 'by'.", call. = FALSE)
   }
 
   matches <- dplyr::bind_rows(lapply(seq_along(by$x), function(i) {
