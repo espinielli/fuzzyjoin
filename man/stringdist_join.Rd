@@ -10,7 +10,8 @@
 \alias{stringdist_semi_join}
 \title{Join two tables based on fuzzy string matching of their columns}
 \usage{
-stringdist_join(x, y, by = NULL, max_dist = 2, method = "osa",
+stringdist_join(x, y, by = NULL, max_dist = 2, method = c("osa", "lv",
+  "dl", "hamming", "lcs", "qgram", "cosine", "jaccard", "jw", "soundex"),
   mode = "inner", ignore_case = FALSE, ...)
 
 stringdist_inner_join(x, y, by = NULL, ...)

@@ -39,8 +39,12 @@
 #'
 #' @export
 stringdist_join <- function(x, y, by = NULL, max_dist = 2,
-                            method = "osa", mode = "inner",
+                            method = c("osa", "lv", "dl", "hamming", "lcs", "qgram",
+                                       "cosine", "jaccard", "jw", "soundex"),
+                            mode = "inner",
                             ignore_case = FALSE, ...) {
+  method <- match.arg(method)
+
   if (method == "soundex") {
     # soundex always returns 0 or 1, so any other max_dist would
     # lead either to always matching or never matching
@@ -53,8 +57,25 @@ stringdist_join <- function(x, y, by = NULL, max_dist = 2,
       v2 <- stringr::str_to_lower(v2)
     }
 
-    dists <- stringdist::stringdist(v1, v2, method = method, ...)
-    dists <= max_dist
+    # shortcut for Levenshtein-like methods: if the difference in
+    # string length is greater than the maximum string distance, the
+    # edit distance must be at least that large
+
+    # length is much faster to compute than string distance
+    if (method %in% c("osa", "lv", "dl")) {
+      length_diff <- abs(stringr::str_length(v1) - stringr::str_length(v2))
+      include <- length_diff <= max_dist
+
+      ret <- logical(length(v1))
+
+      dists <- stringdist::stringdist(v1[include], v2[include], method = method, ...)
+      ret[include] <- dists <= max_dist
+      ret
+    } else {
+      # have to compute them all
+      dists <- stringdist::stringdist(v1, v2, method = method, ...)
+      dists <= max_dist
+    }
   }
 
   fuzzy_join(x, y, by = by, mode = mode, match_fun = match_fun)
