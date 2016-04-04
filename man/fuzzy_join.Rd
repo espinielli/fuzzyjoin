@@ -11,7 +11,8 @@
 \title{Join two tables based not on exact matches, but rather with a function
 describing whether two vectors are matched or not}
 \usage{
-fuzzy_join(x, y, by = NULL, match_fun, mode = "inner", ...)
+fuzzy_join(x, y, by = NULL, match_fun = NULL, multi_by = NULL,
+  multi_match_fun = NULL, mode = "inner", ...)
 
 fuzzy_inner_join(x, y, by = NULL, match_fun, ...)
 
@@ -38,6 +39,12 @@ one for each pair of columns specified in \code{by} (if a named list, it
 uses the names in x).
 If only one function is given it is used on all column pairs.}
 
+\item{multi_by}{Columns to join, where all columns will be used to
+test matches together}
+
+\item{multi_match_fun}{Function to use for testing matches, performed
+on all columns in each data frame simultaneously}
+
 \item{mode}{One of "inner", "left", "right", "full" "semi", or "anti"}
 
 \item{...}{Extra arguments passed to match_fun}
@@ -45,5 +52,10 @@ If only one function is given it is used on all column pairs.}
 \description{
 The \code{match_fun} argument is called once on a vector with all pairs
 of unique comparisons: thus, it should be efficient and vectorized.
+}
+\details{
+Note that as of now, you cannot give both \code{match_fun}
+and \code{multi_match_fun}- you can either compare each column
+individually or compare all of them.
 }
 

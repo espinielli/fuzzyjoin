@@ -1,4 +1,4 @@
-#' Join two tables based on absolute distance between their columns
+#' Join two tables based on absolute difference between their columns
 #'
 #' @param x A tbl
 #' @param y A tbl

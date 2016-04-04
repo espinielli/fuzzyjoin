@@ -21,7 +21,8 @@ Imports:
     stringr,
     dplyr,
     tidyr (>= 0.4.0),
-    purrr
+    purrr,
+    geosphere
 Suggests:
     testthat,
     knitr,

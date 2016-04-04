@@ -8,7 +8,7 @@
 \alias{difference_left_join}
 \alias{difference_right_join}
 \alias{difference_semi_join}
-\title{Join two tables based on absolute distance between their columns}
+\title{Join two tables based on absolute difference between their columns}
 \usage{
 difference_join(x, y, by = NULL, max_dist = 1, mode = "inner")
 
@@ -36,7 +36,7 @@ difference_anti_join(x, y, by = NULL, max_dist = 1)
 \item{mode}{One of "inner", "left", "right", "full" "semi", or "anti"}
 }
 \description{
-Join two tables based on absolute distance between their columns
+Join two tables based on absolute difference between their columns
 }
 \examples{
 
