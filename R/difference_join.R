@@ -22,7 +22,7 @@ difference_join <- function(x, y, by = NULL, max_dist = 1, mode = "inner") {
     abs(v1 - v2) <= max_dist
   }
 
-  fuzzy_join(x, y, by = by, match_fun = match_fun)
+  fuzzy_join(x, y, by = by, match_fun = match_fun, mode = mode)
 }
 
 
