@@ -26,6 +26,8 @@
 #' with the \code{multi_by} and \code{multi_match_fun} arguments to
 #' \code{fuzzy_join}.
 #'
+#' @importFrom utils data
+#'
 #' @examples
 #'
 #' library(dplyr)

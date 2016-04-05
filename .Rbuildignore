@@ -3,3 +3,4 @@
 ^README\.Rmd$
 ^README-cache
 ^README-fig
+vignettes/.*cache

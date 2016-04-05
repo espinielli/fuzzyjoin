@@ -1,1 +1,1 @@
-globalVariables(c("tbl_vars", "indices"))
+globalVariables(c("tbl_vars", "indices", "data"))
