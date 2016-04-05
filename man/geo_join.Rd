@@ -65,8 +65,7 @@ with the \code{multi_by} and \code{multi_match_fun} arguments to
 \examples{
 
 library(dplyr)
-data("state.center")
-data("state.name")
+data("state")
 
 # find pairs of US states whose centers are within
 # 200 miles of each other

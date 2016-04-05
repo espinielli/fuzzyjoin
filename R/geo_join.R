@@ -29,8 +29,7 @@
 #' @examples
 #'
 #' library(dplyr)
-#' data("state.center")
-#' data("state.name")
+#' data("state")
 #'
 #' # find pairs of US states whose centers are within
 #' # 200 miles of each other

@@ -30,5 +30,6 @@ Suggests:
     qdapDictionaries,
     readr,
     rvest,
-    rmarkdown
+    rmarkdown,
+    maps
 RoxygenNote: 5.0.1
