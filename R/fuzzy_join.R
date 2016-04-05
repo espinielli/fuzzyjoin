@@ -129,14 +129,19 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
 
     m <- multi_match_fun(ux_input, uy_input)
 
-    x_indices_l <- indices_x$indices[ix[m]]
-    y_indices_l <- indices_y$indices[iy[m]]
-    xls <- purrr::map_dbl(x_indices_l, length)
-    yls <- purrr::map_dbl(y_indices_l, length)
-    x_rep <- unlist(purrr::map2(x_indices_l, yls, function(x, y) rep(x, each = y)))
-    y_rep <- unlist(purrr::map2(y_indices_l, xls, function(y, x) rep(y, x)))
+    if (sum(m) == 0) {
+      # there are no matches
+      matches <- dplyr::data_frame(x = numeric(0), y = numeric(0))
+    } else {
+      x_indices_l <- indices_x$indices[ix[m]]
+      y_indices_l <- indices_y$indices[iy[m]]
+      xls <- purrr::map_dbl(x_indices_l, length)
+      yls <- purrr::map_dbl(y_indices_l, length)
+      x_rep <- unlist(purrr::map2(x_indices_l, yls, function(x, y) rep(x, each = y)))
+      y_rep <- unlist(purrr::map2(y_indices_l, xls, function(y, x) rep(y, x)))
 
-    matches <- dplyr::data_frame(x = x_rep, y = y_rep)
+      matches <- dplyr::data_frame(x = x_rep, y = y_rep)
+    }
   }
 
   if (mode == "semi") {

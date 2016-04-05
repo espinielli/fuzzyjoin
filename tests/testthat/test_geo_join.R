@@ -22,4 +22,12 @@ test_that("geo_inner_join works", {
 
   expect_true(all(d <= 1))
   expect_true(any(d >= .5))
+
+  # test it works even when there are no matches
+  j2 <- latlong1 %>%
+    geo_inner_join(latlong2, max_dist = .00001)
+
+  expect_equal(nrow(j2), 0)
+  expect_true(all(c("latitude.x", "latitude.y",
+                    "longitude.x", "longitude.y") %in% colnames(j2)))
 })

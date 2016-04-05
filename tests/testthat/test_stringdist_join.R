@@ -152,6 +152,12 @@ test_that("stringdist_join works with data frames without matches", {
   expect_equal(nrow(j1), 0)
   expect_true(all(c("carat", "cut", "cut2", "type") %in% colnames(j1)))
 
+  # check it works when column names are the same
+  d2 <- rename(d, cut = cut2)
+  j1_5 <- stringdist_inner_join(diamonds, d2, by = c(cut = "cut"))
+  expect_equal(nrow(j1_5), 0)
+  expect_true(all(c("carat", "cut.x", "cut.y", "type") %in% colnames(j1_5)))
+
   j2 <- stringdist_left_join(diamonds, d, by = c(cut = "cut2"))
   expect_equal(nrow(j2), nrow(diamonds))
   expect_true(all(is.na(j2$cut2)))
