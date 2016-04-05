@@ -5,3 +5,4 @@
 ^README-fig
 vignettes/.*cache
 ^cran-comments\.md$
+^\.travis\.yml$
