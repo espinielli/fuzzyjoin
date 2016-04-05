@@ -4,3 +4,4 @@
 ^README-cache
 ^README-fig
 vignettes/.*cache
+^cran-comments\.md$
