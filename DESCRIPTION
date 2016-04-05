@@ -29,5 +29,6 @@ Suggests:
     ggplot2,
     qdapDictionaries,
     readr,
-    rvest
+    rvest,
+    rmarkdown
 RoxygenNote: 5.0.1
