@@ -30,7 +30,14 @@ The package also includes:
 
 ### Installation
 
-Install from GitHub using [devtools](https://cran.r-project.org/package=devtools):
+Install from CRAN with:
+
+
+```r
+install.packages("fuzzyjoin")
+```
+
+You can also install the development version from GitHub using [devtools](https://cran.r-project.org/package=devtools):
 
 
 ```r
