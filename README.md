@@ -197,7 +197,7 @@ sum(which_correct$guesses == 1 & which_correct$one_correct)
 
 Not bad.
 
-Note that `stringdist_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `stringdiststringdist_left_join`:
+Note that `stringdist_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `stringdist_left_join`:
 
 
 ```r
