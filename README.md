@@ -5,7 +5,10 @@
 fuzzyjoin: Join data frames on inexact matching
 ------------------
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/fuzzyjoin)](http://cran.r-project.org/package=fuzzyjoin) [![Travis-CI Build Status](https://travis-ci.org/dgrtwo/fuzzyjoin.svg?branch=master)](https://travis-ci.org/dgrtwo/fuzzyjoin)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/fuzzyjoin)](http://cran.r-project.org/package=fuzzyjoin)
+[![Travis-CI Build Status](https://travis-ci.org/dgrtwo/fuzzyjoin.svg?branch=master)](https://travis-ci.org/dgrtwo/fuzzyjoin)
+[![Coverage Status](https://img.shields.io/codecov/c/github/dgrtwo/fuzzyjoin/master.svg)](https://codecov.io/github/dgrtwo/fuzzyjoin?branch=master)
+
 
 The fuzzyjoin package is a variation on dplyr's [join](http://www.inside-r.org/node/230646) operations that allows matching not just on values that match between columns, but on inexact matching. This allows matching on:
 

@@ -31,5 +31,6 @@ Suggests:
     readr,
     rvest,
     rmarkdown,
-    maps
+    maps,
+    covr
 RoxygenNote: 5.0.1
