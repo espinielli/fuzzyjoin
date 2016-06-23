@@ -64,7 +64,7 @@
 #'
 #' @export
 geo_join <- function(x, y, by = NULL, max_dist,
-                     method = c("haversine", "cosine", "meeus",
+                     method = c("haversine", "geo", "cosine", "meeus",
                                 "vincentysphere", "vincentyellipsoid"),
                      unit = c("miles", "km"),
                      mode = "inner",
