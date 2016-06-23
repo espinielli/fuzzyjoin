@@ -17,6 +17,7 @@ fuzzyjoin: Join data frames on inexact matching
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/fuzzyjoin)](http://cran.r-project.org/package=fuzzyjoin)
 [![Travis-CI Build Status](https://travis-ci.org/dgrtwo/fuzzyjoin.svg?branch=master)](https://travis-ci.org/dgrtwo/fuzzyjoin)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/dgrtwo/fuzzyjoin?branch=master&svg=true)](https://ci.appveyor.com/project/dgrtwo/fuzzyjoin)
 [![Coverage Status](https://img.shields.io/codecov/c/github/dgrtwo/fuzzyjoin/master.svg)](https://codecov.io/github/dgrtwo/fuzzyjoin?branch=master)
 
 
