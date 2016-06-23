@@ -40,6 +40,7 @@ The package also includes:
   * `regex_semi_join` (filter left table for rows with matches)
   * `regex_anti_join` (filter left table for rows without matches)
 * A general wrapper (`fuzzy_join`) that allows you to define your own custom fuzzy matching function.
+* The option to include the calculated distance as a column in your output, using the `distance_col` argument
 
 ### Installation
 
@@ -97,6 +98,8 @@ By default, `stringdist_inner_join` uses optimal string alignment (Damerau–Lev
 joined
 ```
 
+#### Classification accuracy
+
 Note that there are some redundancies; words that could be multiple items in the dictionary. These end up with one row per "guess" in the output. How many words did we classify?
 
 ```{r dependson = "joined"}
@@ -121,6 +124,33 @@ sum(which_correct$guesses == 1 & which_correct$one_correct)
 ```
 
 Not bad.
+
+#### Reporting distance in the joined output
+
+If you wanted to include the distance as a column in your output, you can use the `distance_col` argument. For example, we may be interested in how many words were *two* letters apart.
+
+```{r joined_dists, dependson = "sub_misspellings"}
+joined_dists <- sub_misspellings %>%
+  stringdist_inner_join(words, by = c(misspelling = "word"), max_dist = 2,
+                        distance_col = "distance")
+
+joined_dists
+```
+
+Note the extra `distance` column, which in this case will always be less than or equal to 2. We could then pick the closest match for each, and examine how many of our closest matches were 1 or 2 away:
+
+```{r, dependson = "joined_dists"}
+closest <- joined_dists %>%
+  group_by(misspelling) %>%
+  top_n(1, desc(distance))
+
+closest
+
+closest %>%
+  count(distance)
+```
+
+#### Other joining functions
 
 Note that `stringdist_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `stringdist_left_join`:
 

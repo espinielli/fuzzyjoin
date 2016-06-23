@@ -30,6 +30,7 @@ The package also includes:
   * `regex_semi_join` (filter left table for rows with matches)
   * `regex_anti_join` (filter left table for rows without matches)
 * A general wrapper (`fuzzy_join`) that allows you to define your own custom fuzzy matching function.
+* The option to include the calculated distance as a column in your output, using the `distance_col` argument
 
 ### Installation
 
@@ -139,6 +140,8 @@ joined
 #> ..         ...     ...     ...       ...
 ```
 
+#### Classification accuracy
+
 Note that there are some redundancies; words that could be multiple items in the dictionary. These end up with one row per "guess" in the output. How many words did we classify?
 
 
@@ -199,6 +202,73 @@ sum(which_correct$guesses == 1 & which_correct$one_correct)
 ```
 
 Not bad.
+
+#### Reporting distance in the joined output
+
+If you wanted to include the distance as a column in your output, you can use the `distance_col` argument. For example, we may be interested in how many words were *two* letters apart.
+
+
+```r
+joined_dists <- sub_misspellings %>%
+  stringdist_inner_join(words, by = c(misspelling = "word"), max_dist = 2,
+                        distance_col = "distance")
+
+joined_dists
+#> Source: local data frame [7,427 x 5]
+#> 
+#>    misspelling    correct       word syllables distance
+#>          (chr)      (chr)      (chr)     (dbl)    (dbl)
+#> 1   charactors characters  character         3        2
+#> 2   charactors characters charactery         4        2
+#> 3        sould     should       auld         1        2
+#> 4        sould     should       bold         1        2
+#> 5        sould     should      bound         1        2
+#> 6        sould     should       cold         1        2
+#> 7        sould     should      could         1        1
+#> 8        sould     should       fold         1        2
+#> 9        sould     should       foul         1        2
+#> 10       sould     should      found         1        2
+#> ..         ...        ...        ...       ...      ...
+```
+
+Note the extra `distance` column, which in this case will always be less than or equal to 2. We could then pick the closest match for each, and examine how many of our closest matches were 1 or 2 away:
+
+
+```r
+closest <- joined_dists %>%
+  group_by(misspelling) %>%
+  top_n(1, desc(distance))
+
+closest
+#> Source: local data frame [1,437 x 5]
+#> Groups: misspelling [721]
+#> 
+#>     misspelling      correct        word syllables distance
+#>           (chr)        (chr)       (chr)     (dbl)    (dbl)
+#> 1    charactors   characters   character         3        2
+#> 2    charactors   characters  charactery         4        2
+#> 3         sould       should       could         1        1
+#> 4         sould       should      should         1        1
+#> 5         sould       should        sold         1        1
+#> 6         sould       should        soul         1        1
+#> 7         sould       should       sound         1        1
+#> 8         sould       should       would         1        1
+#> 9  incorportaed incorporated incorporate         4        2
+#> 10         awya         away          aa         2        2
+#> ..          ...          ...         ...       ...      ...
+
+closest %>%
+  count(distance)
+#> Source: local data frame [3 x 2]
+#> 
+#>   distance     n
+#>      (dbl) (int)
+#> 1        0     1
+#> 2        1   725
+#> 3        2   711
+```
+
+#### Other joining functions
 
 Note that `stringdist_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `stringdist_left_join`:
 

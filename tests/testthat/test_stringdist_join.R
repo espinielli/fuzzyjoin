@@ -1,6 +1,3 @@
-library(ggplot2)
-library(dplyr)
-
 context("stringdist_join")
 
 # setup
@@ -10,7 +7,7 @@ d <- data_frame(cut2 = c("Idea", "Premiums", "Premiom",
 
 test_that("stringdist_inner_join works on a large df with multiples in each", {
   # create something with names close to the cut column in the diamonds dataset
-  j <- stringdist_inner_join(diamonds, d, by = c(cut = "cut2"))
+  j <- stringdist_inner_join(diamonds, d, by = c(cut = "cut2"), distance_col = "distance")
 
   result <- j %>%
     count(cut, cut2) %>%
@@ -22,6 +19,7 @@ test_that("stringdist_inner_join works on a large df with multiples in each", {
   expect_equal(sum(j$cut == "Premium"), sum(diamonds$cut == "Premium") * 2)
   expect_equal(sum(j$cut == "Very Good"), sum(diamonds$cut == "Very Good") * 2)
   expect_equal(sum(j$cut2 == "Premiom"), sum(diamonds$cut == "Premium"))
+  expect_true(all(j$distance == 1))
 
   vg <- j %>%
     filter(cut == "Very Good") %>%
@@ -132,7 +130,7 @@ test_that("stringdist_inner_join works with multiple match functions", {
   expect_equal(as.character(result$cut), c("Fair", "Very Good", "Premium", "Premium", "Ideal"))
   expect_equal(result$cut2, c("Faiir", "VeryGood", "Premiom", "Premiums", "Idea"))
 
-  expect_less_than(max(abs(j$carat - j$carat2)), .25)
+  expect_lt(max(abs(j$carat - j$carat2)), .25)
 
   # give match_fun as a named list
   j_named <- diamonds %>%

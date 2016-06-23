@@ -1,5 +1,3 @@
-library(dplyr)
-
 set.seed(2016)
 latlong1 <- data_frame(index1 = 1:1000,
                        latitude = rnorm(1000, 40),
@@ -14,7 +12,7 @@ ll2 <- as.matrix(latlong2[c("longitude", "latitude")])
 
 test_that("geo_inner_join works", {
   j <- latlong1 %>%
-    geo_inner_join(latlong2, max_dist = 1)
+    geo_inner_join(latlong2, max_dist = 1, distance_col = "distance")
 
   expect_true(nrow(j) > 0)
 
@@ -22,10 +20,11 @@ test_that("geo_inner_join works", {
 
   expect_true(all(d <= 1))
   expect_true(any(d >= .5))
+  expect_equal(d, j$distance)
 
   # test it works even when there are no matches
   j2 <- latlong1 %>%
-    geo_inner_join(latlong2, max_dist = .00001)
+    geo_inner_join(latlong2, max_dist = .00001, distance_col = "distance")
 
   expect_equal(nrow(j2), 0)
   expect_true(all(c("latitude.x", "latitude.y",
