@@ -182,3 +182,35 @@ test_that("stringdist_join works with data frames without matches", {
   expect_true("cut" %in% colnames(diamonds))
   expect_true(!("cut2" %in% colnames(diamonds)))
 })
+
+
+test_that("stringdist_join works on grouped data frames", {
+  d <- data_frame(cut2 = c("Idea", "Premiums", "Premiom",
+                           "VeryGood", "VeryGood", "Faiir")) %>%
+    mutate(type = row_number())
+
+  diamonds_grouped <- diamonds %>%
+    group_by(cut)
+
+  d2 <- data_frame(cut = c("Idea", "Premiums", "Premiom",
+                           "VeryGood", "VeryGood", "Faiir")) %>%
+    mutate(type = row_number())
+
+  for (mode in c("inner", "left", "right", "full", "semi", "anti")) {
+    j1 <- stringdist_join(diamonds, d, by = c(cut = "cut2"), mode = mode)
+    j2 <- stringdist_join(diamonds_grouped, d, by = c(cut = "cut2"), mode = mode)
+
+    expect_equal(length(groups(j2)), 1)
+    expect_equal(as.character(groups(j2)[[1]]), "cut")
+    expect_equal(j1, ungroup(j2))
+
+    j3 <- stringdist_join(diamonds_grouped, d2, by = "cut", mode = mode)
+    expect_equal(length(groups(j3)), 1)
+    expect_equal(nrow(j1), nrow(j3))
+    if (mode %in% c("semi", "anti")) {
+      expect_equal(as.character(groups(j3)[[1]]), "cut")
+    } else {
+      expect_equal(as.character(groups(j3)[[1]]), "cut.x")
+    }
+  }
+})

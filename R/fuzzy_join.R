@@ -29,12 +29,31 @@
 #' and \code{multi_match_fun}- you can either compare each column
 #' individually or compare all of them.
 #'
+#' Like in dplyr's join operations, \code{fuzzy_join} ignores groups,
+#' but preserves the grouping of x in the output.
+#'
 #' @importFrom dplyr %>%
 #'
 #' @export
 fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
                        multi_by = NULL, multi_match_fun = NULL,
                        mode = "inner", ...) {
+  # preserve the grouping of x
+  x_groups <- dplyr::groups(x)
+  x <- dplyr::ungroup(x)
+  regroup <- function(d) {
+    if (is.null(x_groups)) {
+      return(d)
+    }
+
+    g <- purrr::map_chr(x_groups, as.character)
+    missing <- !(g %in% colnames(d))
+    # add .x to those that are missing; they've been renamed
+    g[missing] <- paste0(g[missing], ".x")
+
+    dplyr::group_by_(d, .dots = g)
+  }
+
   mode <- match.arg(mode, c("inner", "left", "right", "full", "semi", "anti"))
 
   if (is.null(multi_match_fun) && is.null(match_fun)) {
@@ -47,10 +66,10 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
   if (is.null(multi_match_fun) || !is.null(by)) {
     by <- common_by(by, x, y)
 
-    if (length(match_fun) == 1){
+    if (length(match_fun) == 1) {
       match_fun <- rep(c(match_fun), length(by$x))
     }
-    if (length(match_fun) != length(by$x)){
+    if (length(match_fun) != length(by$x)) {
       stop("Length of match_fun not equal to columns specified in 'by'.", call. = FALSE)
     }
 
@@ -199,14 +218,14 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
 
   if (mode == "semi") {
     # just use the x indices to include
-    return(x[sort(unique(matches$x)), ])
+    return(regroup(x[sort(unique(matches$x)), ]))
   }
   if (mode == "anti") {
     if (nrow(matches) == 0) {
-      return(x)
+      return(regroup(x))
     }
     # just use the x indices to exclude
-    return(x[-sort(unique(matches$x)), ])
+    return(regroup(x[-sort(unique(matches$x)), ]))
   }
 
   matches <- dplyr::arrange(matches, x, y)
@@ -237,7 +256,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
     ret <- dplyr::bind_cols(ret, extra_cols)
   }
 
-  ret
+  regroup(ret)
 }
 
 

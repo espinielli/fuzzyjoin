@@ -63,5 +63,8 @@ one is filtering on.
 Note that as of now, you cannot give both \code{match_fun}
 and \code{multi_match_fun}- you can either compare each column
 individually or compare all of them.
+
+Like in dplyr's join operations, \code{fuzzy_join} ignores groups,
+but preserves the grouping of x in the output.
 }
 
