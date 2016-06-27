@@ -13,6 +13,7 @@
 
 * Added codecov to measure test coverage
 * Added AppVeyor continuous integration
+* Added Code of Conduct
 
 # fuzzyjoin 0.1
 
