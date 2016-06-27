@@ -184,6 +184,23 @@ test_that("stringdist_join works with data frames without matches", {
 })
 
 
+test_that("stringdist_join renames similar columns", {
+  d <- data_frame(cut = c("Idea", "Premiums", "Premiom",
+                           "VeryGood", "VeryGood", "Faiir")) %>%
+    mutate(price = row_number())
+
+  j <- stringdist_inner_join(diamonds, d, by = "cut")
+
+  expect_true("cut.x" %in% colnames(j))
+  expect_true("price.x" %in% colnames(j))
+  expect_true("cut.y" %in% colnames(j))
+  expect_true("price.y" %in% colnames(j))
+
+  expect_true(all(j$cut.y %in% d$cut))
+  expect_true(all(j$price.y %in% d$price))
+})
+
+
 test_that("stringdist_join works on grouped data frames", {
   d <- data_frame(cut2 = c("Idea", "Premiums", "Premiom",
                            "VeryGood", "VeryGood", "Faiir")) %>%

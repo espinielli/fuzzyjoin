@@ -231,7 +231,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
   matches <- dplyr::arrange(matches, x, y)
 
   # in cases where columns share a name, rename each to .x and .y
-  for (n in by$x[by$x == by$y]) {
+  for (n in intersect(colnames(x), colnames(y))) {
     x <- dplyr::rename_(x, .dots = structure(n, .Names = paste0(n, ".x")))
     y <- dplyr::rename_(y, .dots = structure(n, .Names = paste0(n, ".y")))
   }

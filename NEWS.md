@@ -4,6 +4,7 @@
 * Added AppVeyor continuous integration
 * Added option not only to join based on a maximum distance but also to append a distance column, using the `distance_col` argument. This is available in `difference_join`, `distance_join`, `stringdist_join`, and `geo_join`
 * Fixed to ignore groups while preserving the groups of x in the output
+* Fixed to append `.x` and `.y` to all common columns, not just those in `by`
 
 # fuzzyjoin 0.1
 
