@@ -183,7 +183,7 @@ You can try other distance thresholds, other dictionaries, and other distance me
 
 ### Example of `regex_inner_join`: Classifying text based on regular expressions
 
-Consider the book Pride and Prejudice, by Jane Austen, which we can access through the [janeaustenr package](https://cran.r-project.org/web/packages/janeaustenr/index.html).
+Consider the book Pride and Prejudice, by Jane Austen, which we can access through the [janeaustenr package](https://cran.r-project.org/package=janeaustenr).
 
 We could split the books up into "passages" of 50 lines each.
 
