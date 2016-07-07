@@ -250,7 +250,8 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
       dplyr::full_join(dplyr::data_frame(y = seq_len(nrow(y))), by = "y")
   }
 
-  ret <- dplyr::bind_cols(x[matches$x, ], y[matches$y, ])
+  ret <- dplyr::bind_cols(x[matches$x, ],
+                          y[matches$y, ])
   if (ncol(matches) > 2) {
     extra_cols <- matches[, -(1:2), drop = FALSE]
     ret <- dplyr::bind_cols(ret, extra_cols)
