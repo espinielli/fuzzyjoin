@@ -1,3 +1,7 @@
+# fuzzyjoin 0.1.1.9000
+
+* Fixed #13: added drop = TRUE, which for data.frames (rather than tbl_dfs) allows single column data frames as input
+
 # fuzzyjoin 0.1.1
 
 ## Features
