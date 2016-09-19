@@ -1,6 +1,7 @@
-# fuzzyjoin 0.1.1.9000
+# fuzzyjoin 0.1.2
 
-* Fixed #13: added drop = TRUE, which for data.frames (rather than tbl_dfs) allows single column data frames as input
+* Fixed bug that failed when single column data frames (not tbl_dfs) were given (#13)
+* Updated README for newest versions of dplyr and janeaustenr
 
 # fuzzyjoin 0.1.1
 
