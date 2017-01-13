@@ -26,14 +26,15 @@ The fuzzyjoin package is a variation on dplyr's [join](http://www.inside-r.org/n
 * Numeric values that are within some tolerance (`difference_inner_join`)
 * Strings that are similiar in Levenshtein/cosine/Jaccard distance, or [other metrics](http://finzi.psych.upenn.edu/library/stringdist/html/stringdist-metrics.html) from the [stringdist](https://cran.r-project.org/package=stringdist) package (`stringdist_inner_join`)
 * A regular expression in one column matching to another (`regex_inner_join`)
-* Euclidean or Manhattan distance across multiple columns (`distance_join`)
-* Geographic distance based on longitude and latitude (`geo_join`)
+* Euclidean or Manhattan distance across multiple columns (`distance_inner_join`)
+* Geographic distance based on longitude and latitude (`geo_inner_join`)
+* Intervals of (start, end) that overlap (`interval_inner_join`)
 
 One relevant use case is for classifying freeform text data (such as survey responses) against a finite set of options.
 
 The package also includes:
 
-* For each of `regex_`, `stringdist_`, `difference_`, `distance_` and `geo_`, variations for the six dplyr "join" operations- for example,
+* For each of `regex_`, `stringdist_`, `difference_`, `distance_`, `geo_`, and `interval_`, variations for the six dplyr "join" operations- for example,
   * `regex_inner_join` (include only rows with matches in each)
   * `regex_left_join` (include all rows of left table)
   * `regex_right_join` (include all rows of right table)

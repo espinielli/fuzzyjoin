@@ -12,7 +12,7 @@
 describing whether two vectors are matched or not}
 \usage{
 fuzzy_join(x, y, by = NULL, match_fun = NULL, multi_by = NULL,
-  multi_match_fun = NULL, mode = "inner", ...)
+  multi_match_fun = NULL, index_match_fun = NULL, mode = "inner", ...)
 
 fuzzy_inner_join(x, y, by = NULL, match_fun, ...)
 
@@ -44,6 +44,10 @@ test matches together}
 
 \item{multi_match_fun}{Function to use for testing matches, performed
 on all columns in each data frame simultaneously}
+
+\item{index_match_fun}{Function to use for matching tables. Unlike
+\code{match_fun} and \code{index_match_fun}, this is performed on the
+original columns and returns pairs of indices.}
 
 \item{mode}{One of "inner", "left", "right", "full" "semi", or "anti"}
 

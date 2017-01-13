@@ -15,7 +15,7 @@ common_by <- function(by = NULL, x, y) {
     return(list(x = x, y = y))
   }
 
-  by <- intersect(tbl_vars(x), tbl_vars(y))
+  by <- intersect(dplyr::tbl_vars(x), dplyr::tbl_vars(y))
   if (length(by) == 0) {
     stop("No common variables. Please specify `by` param.", call. = FALSE)
   }
