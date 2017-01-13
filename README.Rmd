@@ -29,6 +29,7 @@ The fuzzyjoin package is a variation on dplyr's [join](http://www.inside-r.org/n
 * Euclidean or Manhattan distance across multiple columns (`distance_inner_join`)
 * Geographic distance based on longitude and latitude (`geo_inner_join`)
 * Intervals of (start, end) that overlap (`interval_inner_join`)
+* Genomic intervals, which include both a chromosome ID and (start, end) pairs, that overlap (`genome_inner_join`)
 
 One relevant use case is for classifying freeform text data (such as survey responses) against a finite set of options.
 

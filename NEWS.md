@@ -1,7 +1,8 @@
 # fuzzyjoin 0.1.2.9000
 
 * Added `interval_join`, which joins tables on cases where (start, end) intervals overlap between the two columns. This adds IRanges from Bioconductor to SUGGESTS.
-* Added `index_match_fun` argument to `fuzzy_join`, which handles functions (such as `interval_join`) that operate on the original columns rather than all pairs of columns.
+* Added `genome_join`, which is a more specific case of `interval_join` that joins tables on based on (chromosome, start, end), where the chromosome must agree and (start, end) must overlap.
+* Added `index_match_fun` argument to `fuzzy_join`, which handles functions (such as `interval_join` and `genome_join`) that operate on the original columns rather than all pairs of columns.
 
 # fuzzyjoin 0.1.2
 
