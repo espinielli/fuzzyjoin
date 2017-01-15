@@ -15,6 +15,9 @@
 #' @param mode One of "inner", "left", "right", "full" "semi", or "anti"
 #' @param ... Extra arguments passed on to \code{\link[IRanges]{findOverlaps}}
 #'
+#' @details This allows joining on date or datetime intervals. It throws an
+#' error if the type of date/datetime disagrees between the two tables.
+#'
 #' @examples
 #'
 #' x1 <- data.frame(id1 = 1:3, start = c(1, 5, 10), end = c(3, 7, 15))
@@ -48,8 +51,23 @@ interval_join <- function(x, y, by, mode = "inner", ...) {
       stop("interval_join must join on exactly two columns (start and end)")
     }
 
-    r1 <- IRanges::IRanges(x[[1]], x[[2]])
-    r2 <- IRanges::IRanges(y[[1]], y[[2]])
+    # can join integer/numeric columns, but avoid any other class conflicts
+    for (i in 1:2) {
+      cx <- class(x[[i]])[1]
+      cy <- class(y[[i]])[1]
+
+      if (cx != cy &&
+          !(cx %in% c("numeric", "integer") && cy %in% c("numeric", "integer"))) {
+        stop("Cannot join columns of class ", cx, " and ", cy)
+      }
+
+      if (cx == "character") {
+        stop("Cannot join columns of class 'character'")
+      }
+    }
+
+    r1 <- IRanges::IRanges(as.numeric(x[[1]]), as.numeric(x[[2]]))
+    r2 <- IRanges::IRanges(as.numeric(y[[1]]), as.numeric(y[[2]]))
 
     ret <- as.data.frame(IRanges::findOverlaps(r1, r2, ...))
     names(ret) <- c("x", "y")
