@@ -151,8 +151,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
         dplyr::filter(n == length(by$x))
 
       matches <- matches %>%
-        dplyr::semi_join(accept, by = c("x", "y")) %>%
-        distinct(x, y, .keep_all = TRUE)
+        dplyr::semi_join(accept, by = c("x", "y"))
 
       if (ncol(matches) > 3) {
         # include one for each
