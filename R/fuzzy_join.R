@@ -162,6 +162,8 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
           tidyr::gather(key, value, -x, -y, -name) %>%
           tidyr::unite(newname, name, key, sep = ".") %>%
           tidyr::spread(newname, value)
+      } else {
+        matches <- distinct(matches, x, y)
       }
     }
   } else if (!is.null(multi_match_fun)) {
