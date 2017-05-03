@@ -31,8 +31,11 @@
 #'  regex_inner_join(d, by = c(cut = "regex_name"))
 #'
 #' @export
-regex_join <- function(x, y, by = NULL, mode = "inner") {
+regex_join <- function(x, y, by = NULL, mode = "inner", ignore_case = FALSE) {
   match_fun <- function(v1, v2) {
+    if (ignore_case) {
+      v2 <- stringr::fixed(v2, ignore_case = T)  
+    }
     stringr::str_detect(v1, v2)
   }
 
