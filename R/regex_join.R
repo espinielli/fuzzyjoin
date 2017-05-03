@@ -44,40 +44,40 @@ regex_join <- function(x, y, by = NULL, mode = "inner", ignore_case = FALSE) {
 #' @rdname regex_join
 #' @export
 regex_inner_join <- function(x, y, by = NULL, ignore_case = FALSE) {
-  regex_join(x, y, by, mode = "inner")
+  regex_join(x, y, by, mode = "inner", ignore_case = ignore_case)
 }
 
 
 #' @rdname regex_join
 #' @export
 regex_left_join <- function(x, y, by = NULL, ignore_case = FALSE) {
-  regex_join(x, y, by, mode = "left")
+  regex_join(x, y, by, mode = "left", ignore_case = ignore_case)
 }
 
 
 #' @rdname regex_join
 #' @export
 regex_right_join <- function(x, y, by = NULL, ignore_case = FALSE) {
-  regex_join(x, y, by, mode = "right")
+  regex_join(x, y, by, mode = "right", ignore_case = ignore_case)
 }
 
 
 #' @rdname regex_join
 #' @export
 regex_full_join <- function(x, y, by = NULL, ignore_case = FALSE) {
-  regex_join(x, y, by, mode = "full")
+  regex_join(x, y, by, mode = "full", ignore_case = ignore_case)
 }
 
 
 #' @rdname regex_join
 #' @export
 regex_semi_join <- function(x, y, by = NULL, ignore_case = FALSE) {
-  regex_join(x, y, by, mode = "semi")
+  regex_join(x, y, by, mode = "semi", ignore_case = ignore_case)
 }
 
 
 #' @rdname regex_join
 #' @export
 regex_anti_join <- function(x, y, by = NULL, ignore_case = FALSE) {
-  regex_join(x, y, by, mode = "anti")
+  regex_join(x, y, by, mode = "anti", ignore_case = ignore_case)
 }
