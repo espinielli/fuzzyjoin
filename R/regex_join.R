@@ -8,6 +8,7 @@
 #' @param y A tbl
 #' @param by Columns by which to join the two tables
 #' @param mode One of "inner", "left", "right", "full" "semi", or "anti"
+#' @param ignore_case @param ignore_case Whether to be case insensitive (default no)
 #'
 #' @seealso \code{\link{str_detect}}
 #'
@@ -33,10 +34,7 @@
 #' @export
 regex_join <- function(x, y, by = NULL, mode = "inner", ignore_case = FALSE) {
   match_fun <- function(v1, v2) {
-    if (ignore_case) {
-      v2 <- stringr::fixed(v2, ignore_case = T)  
-    }
-    stringr::str_detect(v1, v2)
+    stringr::str_detect(v1, stringr::fixed(v2, ignore_case = ignore_case))
   }
 
   fuzzy_join(x, y, by = by, match_fun = match_fun, mode = mode)
