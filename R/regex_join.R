@@ -34,7 +34,7 @@
 #' @export
 regex_join <- function(x, y, by = NULL, mode = "inner", ignore_case = FALSE) {
   match_fun <- function(v1, v2) {
-    stringr::str_detect(v1, stringr::fixed(v2, ignore_case = ignore_case))
+    stringr::str_detect(v1, stringr::regex(v2, ignore_case = ignore_case))
   }
 
   fuzzy_join(x, y, by = by, match_fun = match_fun, mode = mode)
