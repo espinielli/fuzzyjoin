@@ -8,7 +8,7 @@
 #' @param y A tbl
 #' @param by Columns by which to join the two tables
 #' @param mode One of "inner", "left", "right", "full" "semi", or "anti"
-#' @param ignore_case @param ignore_case Whether to be case insensitive (default no)
+#' @param ignore_case Whether to be case insensitive (default no)
 #'
 #' @seealso \code{\link{str_detect}}
 #'
