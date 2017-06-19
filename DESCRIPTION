@@ -3,7 +3,7 @@ Type: Package
 Title: Join Tables Together on Inexact Matching
 Version: 0.1.3
 Date: 2017-06-19
-Authors@R: c(person("David", "Robinson", email = "drobinson@stackoverflow.com",
+Authors@R: c(person("David", "Robinson", email = "admiral.david@gmail.com",
     role = c("aut", "cre")),
           person("Joran", "Elias", email = "statisticalskier@gmail.com",
           role = "ctb"))
