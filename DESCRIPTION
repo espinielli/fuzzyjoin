@@ -7,7 +7,7 @@ Authors@R: c(person("David", "Robinson", email = "admiral.david@gmail.com",
     role = c("aut", "cre")),
           person("Joran", "Elias", email = "statisticalskier@gmail.com",
           role = "ctb"))
-Maintainer: David Robinson <drobinson@stackoverflow.com>
+Maintainer: David Robinson <admiral.david@gmail.com>
 Description: Join tables together based not on whether columns
   match exactly, but whether they are similar by some comparison.
   Implementations include string distance and regular expression
