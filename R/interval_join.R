@@ -31,7 +31,7 @@
 #'
 #' # Require that they overlap by more than a particular amount
 #' interval_inner_join(x1, x2, minoverlap = 3)
-#'
+#'70-9
 #' # other types of joins:
 #' interval_full_join(x1, x2)
 #' interval_left_join(x1, x2)
@@ -59,10 +59,6 @@ interval_join <- function(x, y, by, mode = "inner", ...) {
       if (cx != cy &&
           !(cx %in% c("numeric", "integer") && cy %in% c("numeric", "integer"))) {
         stop("Cannot join columns of class ", cx, " and ", cy)
-      }
-
-      if (cx == "character") {
-        stop("Cannot join columns of class 'character'")
       }
     }
 
