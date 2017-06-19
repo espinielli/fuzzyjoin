@@ -5,7 +5,6 @@ common_by <- function(by = NULL, x, y) {
   if (is.list(by)) return(by)
 
   if (!is.null(by)) {
-    by <- by[!duplicated(by)]
     x <- names(by) %||% by
     y <- unname(by)
 
