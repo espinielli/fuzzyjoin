@@ -249,7 +249,7 @@ character_passages %>%
   count(character, sort = TRUE)
 ```
 
-The data is also well suited to discover which characters appear in scenes together, and to cluster them to find groupings of characters (like in [this analysis]).
+The data is also well suited to discover which characters appear in scenes together, and to cluster them to find groupings of characters (like in [this analysis](http://varianceexplained.org/r/love-actually-network/)).
 
 ```{r character_passages_matrix, dependson = "character_passages", fig.width = 6, fig.height = 6}
 passage_character_matrix <- character_passages %>%
