@@ -8,3 +8,4 @@ vignettes/.*cache
 ^\.travis\.yml$
 ^appveyor\.yml$
 ^CONDUCT\.md$
+^docs$
