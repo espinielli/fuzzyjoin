@@ -46,9 +46,9 @@ test_that("Can do non-inner joins on intervals", {
 })
 
 test_that("Can do inner joins on intervals with findOverlaps arguments", {
-  j_maxgap <- interval_inner_join(x1, y1, maxgap = 1)
-  expect_equal(j_maxgap$id1, c(1, 1, 2, 2, 3))
-  expect_equal(j_maxgap$id2, c(1, 2, 1, 2, 3))
+  j_maxgap <- interval_inner_join(x1, y1, maxgap = 1.1)
+  expect_equal(j_maxgap$id1, c(1, 1, 2, 2, 3, 3))
+  expect_equal(j_maxgap$id2, c(1, 2, 1, 2, 2, 3))
 })
 
 test_that("Can join integer and double columns", {
