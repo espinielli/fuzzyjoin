@@ -465,7 +465,7 @@ character_passages %>%
 #> 14 Mary                        24
 ```
 
-The data is also well suited to discover which characters appear in scenes together, and to cluster them to find groupings of characters (like in [this analysis]).
+The data is also well suited to discover which characters appear in scenes together, and to cluster them to find groupings of characters (like in [this analysis](http://varianceexplained.org/r/love-actually-network/)).
 
 
 ```r
