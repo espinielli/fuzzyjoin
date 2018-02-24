@@ -65,18 +65,18 @@ data(misspellings)
 
 misspellings
 #> # A tibble: 4,505 x 2
-#>    misspelling    correct
-#>          <chr>      <chr>
-#>  1  abandonned  abandoned
-#>  2   aberation aberration
-#>  3    abilties  abilities
-#>  4      abilty    ability
-#>  5     abondon    abandon
-#>  6      abbout      about
-#>  7       abotu      about
-#>  8      abouta    about a
-#>  9     aboutit   about it
-#> 10    aboutthe  about the
+#>    misspelling correct   
+#>    <chr>       <chr>     
+#>  1 abandonned  abandoned 
+#>  2 aberation   aberration
+#>  3 abilties    abilities 
+#>  4 abilty      ability   
+#>  5 abondon     abandon   
+#>  6 abbout      about     
+#>  7 abotu       about     
+#>  8 abouta      about a   
+#>  9 aboutit     about it  
+#> 10 aboutthe    about the 
 #> # ... with 4,495 more rows
 ```
 
@@ -89,18 +89,18 @@ words <- tbl_df(DICTIONARY)
 
 words
 #> # A tibble: 20,137 x 2
-#>     word syllables
+#>    word  syllables
 #>  * <chr>     <dbl>
-#>  1    hm         1
-#>  2   hmm         1
-#>  3  hmmm         1
-#>  4  hmph         1
-#>  5 mmhmm         2
-#>  6  mmhm         2
-#>  7    mm         1
-#>  8   mmm         1
-#>  9  mmmm         1
-#> 10   pff         1
+#>  1 hm         1.00
+#>  2 hmm        1.00
+#>  3 hmmm       1.00
+#>  4 hmph       1.00
+#>  5 mmhmm      2.00
+#>  6 mmhm       2.00
+#>  7 mm         1.00
+#>  8 mmm        1.00
+#>  9 mmmm       1.00
+#> 10 pff        1.00
 #> # ... with 20,127 more rows
 ```
 
@@ -125,18 +125,18 @@ By default, `stringdist_inner_join` uses optimal string alignment (Damerau–Lev
 ```r
 joined
 #> # A tibble: 728 x 4
-#>    misspelling correct    word syllables
-#>          <chr>   <chr>   <chr>     <dbl>
-#>  1       sould  should   could         1
-#>  2       sould  should  should         1
-#>  3       sould  should    sold         1
-#>  4       sould  should    soul         1
-#>  5       sould  should   sound         1
-#>  6       sould  should   would         1
-#>  7       fiels   feels   field         1
-#>  8       fiels   feels    fils         1
-#>  9    conscent consent consent         2
-#> 10       fleed   freed   bleed         1
+#>    misspelling correct word    syllables
+#>    <chr>       <chr>   <chr>       <dbl>
+#>  1 sould       should  could        1.00
+#>  2 sould       should  should       1.00
+#>  3 sould       should  sold         1.00
+#>  4 sould       should  soul         1.00
+#>  5 sould       should  sound        1.00
+#>  6 sould       should  would        1.00
+#>  7 fiels       feels   field        1.00
+#>  8 fiels       feels   fils         1.00
+#>  9 conscent    consent consent      2.00
+#> 10 fleed       freed   bleed        1.00
 #> # ... with 718 more rows
 ```
 
@@ -149,18 +149,18 @@ Note that there are some redundancies; words that could be multiple items in the
 joined %>%
   count(misspelling, correct)
 #> # A tibble: 455 x 3
-#>    misspelling      correct     n
-#>          <chr>        <chr> <int>
-#>  1   abritrary    arbitrary     1
-#>  2   accademic     academic     1
-#>  3   accension    ascension     2
-#>  4  accessable   accessible     1
-#>  5    accidant     accident     1
+#>    misspelling correct          n
+#>    <chr>       <chr>        <int>
+#>  1 abritrary   arbitrary        1
+#>  2 accademic   academic         1
+#>  3 accension   ascension        2
+#>  4 accessable  accessible       1
+#>  5 accidant    accident         1
 #>  6 accidentaly accidentally     1
-#>  7   accordeon    accordion     1
-#>  8      addopt        adopt     1
-#>  9   addtional   additional     1
-#> 10  admendment    amendment     1
+#>  7 accordeon   accordion        1
+#>  8 addopt      adopt            1
+#>  9 addtional   additional       1
+#> 10 admendment  amendment        1
 #> # ... with 445 more rows
 ```
 
@@ -175,18 +175,18 @@ which_correct <- joined %>%
 which_correct
 #> # A tibble: 455 x 4
 #> # Groups:   misspelling [?]
-#>    misspelling      correct guesses one_correct
-#>          <chr>        <chr>   <int>       <lgl>
-#>  1   abritrary    arbitrary       1        TRUE
-#>  2   accademic     academic       1        TRUE
-#>  3   accension    ascension       2        TRUE
-#>  4  accessable   accessible       1        TRUE
-#>  5    accidant     accident       1        TRUE
-#>  6 accidentaly accidentally       1       FALSE
-#>  7   accordeon    accordion       1        TRUE
-#>  8      addopt        adopt       1        TRUE
-#>  9   addtional   additional       1        TRUE
-#> 10  admendment    amendment       1        TRUE
+#>    misspelling correct      guesses one_correct
+#>    <chr>       <chr>          <int> <lgl>      
+#>  1 abritrary   arbitrary          1 T          
+#>  2 accademic   academic           1 T          
+#>  3 accension   ascension          2 T          
+#>  4 accessable  accessible         1 T          
+#>  5 accidant    accident           1 T          
+#>  6 accidentaly accidentally       1 F          
+#>  7 accordeon   accordion          1 T          
+#>  8 addopt      adopt              1 T          
+#>  9 addtional   additional         1 T          
+#> 10 admendment  amendment          1 T          
 #> # ... with 445 more rows
 
 # percentage of guesses getting at least one right
@@ -212,18 +212,18 @@ joined_dists <- sub_misspellings %>%
 
 joined_dists
 #> # A tibble: 7,427 x 5
-#>    misspelling    correct       word syllables distance
-#>          <chr>      <chr>      <chr>     <dbl>    <dbl>
-#>  1  charactors characters  character         3        2
-#>  2  charactors characters charactery         4        2
-#>  3       sould     should       auld         1        2
-#>  4       sould     should       bold         1        2
-#>  5       sould     should      bound         1        2
-#>  6       sould     should       cold         1        2
-#>  7       sould     should      could         1        1
-#>  8       sould     should       fold         1        2
-#>  9       sould     should       foul         1        2
-#> 10       sould     should      found         1        2
+#>    misspelling correct    word       syllables distance
+#>    <chr>       <chr>      <chr>          <dbl>    <dbl>
+#>  1 charactors  characters character       3.00     2.00
+#>  2 charactors  characters charactery      4.00     2.00
+#>  3 sould       should     auld            1.00     2.00
+#>  4 sould       should     bold            1.00     2.00
+#>  5 sould       should     bound           1.00     2.00
+#>  6 sould       should     cold            1.00     2.00
+#>  7 sould       should     could           1.00     1.00
+#>  8 sould       should     fold            1.00     2.00
+#>  9 sould       should     foul            1.00     2.00
+#> 10 sould       should     found           1.00     2.00
 #> # ... with 7,417 more rows
 ```
 
@@ -238,18 +238,18 @@ closest <- joined_dists %>%
 
 closest
 #> # A tibble: 1,437 x 5
-#>     misspelling      correct        word syllables distance
-#>           <chr>        <chr>       <chr>     <dbl>    <dbl>
-#>  1   charactors   characters   character         3        2
-#>  2   charactors   characters  charactery         4        2
-#>  3        sould       should       could         1        1
-#>  4        sould       should      should         1        1
-#>  5        sould       should        sold         1        1
-#>  6        sould       should        soul         1        1
-#>  7        sould       should       sound         1        1
-#>  8        sould       should       would         1        1
-#>  9 incorportaed incorporated incorporate         4        2
-#> 10         awya         away          aa         2        2
+#>    misspelling  correct      word        syllables distance
+#>    <chr>        <chr>        <chr>           <dbl>    <dbl>
+#>  1 charactors   characters   character        3.00     2.00
+#>  2 charactors   characters   charactery       4.00     2.00
+#>  3 sould        should       could            1.00     1.00
+#>  4 sould        should       should           1.00     1.00
+#>  5 sould        should       sold             1.00     1.00
+#>  6 sould        should       soul             1.00     1.00
+#>  7 sould        should       sound            1.00     1.00
+#>  8 sould        should       would            1.00     1.00
+#>  9 incorportaed incorporated incorporate      4.00     2.00
+#> 10 awya         away         aa               2.00     2.00
 #> # ... with 1,427 more rows
 
 closest %>%
@@ -257,9 +257,9 @@ closest %>%
 #> # A tibble: 3 x 2
 #>   distance     n
 #>      <dbl> <int>
-#> 1        0     1
-#> 2        1   725
-#> 3        2   711
+#> 1     0        1
+#> 2     1.00   725
+#> 3     2.00   711
 ```
 
 #### Other joining functions
@@ -273,35 +273,35 @@ left_joined <- sub_misspellings %>%
 
 left_joined
 #> # A tibble: 1,273 x 4
-#>     misspelling      correct   word syllables
-#>           <chr>        <chr>  <chr>     <dbl>
-#>  1   charactors   characters   <NA>        NA
-#>  2   Brasillian    Brazilian   <NA>        NA
-#>  3        sould       should  could         1
-#>  4        sould       should should         1
-#>  5        sould       should   sold         1
-#>  6        sould       should   soul         1
-#>  7        sould       should  sound         1
-#>  8        sould       should  would         1
-#>  9  belligerant  belligerent   <NA>        NA
-#> 10 incorportaed incorporated   <NA>        NA
+#>    misspelling  correct      word   syllables
+#>    <chr>        <chr>        <chr>      <dbl>
+#>  1 charactors   characters   <NA>       NA   
+#>  2 Brasillian   Brazilian    <NA>       NA   
+#>  3 sould        should       could       1.00
+#>  4 sould        should       should      1.00
+#>  5 sould        should       sold        1.00
+#>  6 sould        should       soul        1.00
+#>  7 sould        should       sound       1.00
+#>  8 sould        should       would       1.00
+#>  9 belligerant  belligerent  <NA>       NA   
+#> 10 incorportaed incorporated <NA>       NA   
 #> # ... with 1,263 more rows
 
 left_joined %>%
   filter(is.na(word))
 #> # A tibble: 545 x 4
-#>     misspelling      correct  word syllables
-#>           <chr>        <chr> <chr>     <dbl>
-#>  1   charactors   characters  <NA>        NA
-#>  2   Brasillian    Brazilian  <NA>        NA
-#>  3  belligerant  belligerent  <NA>        NA
-#>  4 incorportaed incorporated  <NA>        NA
-#>  5         awya         away  <NA>        NA
-#>  6     occuring    occurring  <NA>        NA
-#>  7  surveilence surveillance  <NA>        NA
-#>  8    abondoned    abandoned  <NA>        NA
-#>  9     alledges      alleges  <NA>        NA
-#> 10  deliberatly deliberately  <NA>        NA
+#>    misspelling  correct      word  syllables
+#>    <chr>        <chr>        <chr>     <dbl>
+#>  1 charactors   characters   <NA>         NA
+#>  2 Brasillian   Brazilian    <NA>         NA
+#>  3 belligerant  belligerent  <NA>         NA
+#>  4 incorportaed incorporated <NA>         NA
+#>  5 awya         away         <NA>         NA
+#>  6 occuring     occurring    <NA>         NA
+#>  7 surveilence  surveillance <NA>         NA
+#>  8 abondoned    abandoned    <NA>         NA
+#>  9 alledges     alleges      <NA>         NA
+#> 10 deliberatly  deliberately <NA>         NA
 #> # ... with 535 more rows
 ```
 
@@ -314,35 +314,35 @@ left_joined2 <- sub_misspellings %>%
 
 left_joined2
 #> # A tibble: 7,691 x 4
-#>    misspelling    correct       word syllables
-#>          <chr>      <chr>      <chr>     <dbl>
-#>  1  charactors characters  character         3
-#>  2  charactors characters charactery         4
-#>  3  Brasillian  Brazilian       <NA>        NA
-#>  4       sould     should       auld         1
-#>  5       sould     should       bold         1
-#>  6       sould     should      bound         1
-#>  7       sould     should       cold         1
-#>  8       sould     should      could         1
-#>  9       sould     should       fold         1
-#> 10       sould     should       foul         1
+#>    misspelling correct    word       syllables
+#>    <chr>       <chr>      <chr>          <dbl>
+#>  1 charactors  characters character       3.00
+#>  2 charactors  characters charactery      4.00
+#>  3 Brasillian  Brazilian  <NA>           NA   
+#>  4 sould       should     auld            1.00
+#>  5 sould       should     bold            1.00
+#>  6 sould       should     bound           1.00
+#>  7 sould       should     cold            1.00
+#>  8 sould       should     could           1.00
+#>  9 sould       should     fold            1.00
+#> 10 sould       should     foul            1.00
 #> # ... with 7,681 more rows
 
 left_joined2 %>%
   filter(is.na(word))
 #> # A tibble: 264 x 4
-#>      misspelling       correct  word syllables
-#>            <chr>         <chr> <chr>     <dbl>
-#>  1    Brasillian     Brazilian  <NA>        NA
-#>  2   belligerant   belligerent  <NA>        NA
-#>  3      occuring     occurring  <NA>        NA
-#>  4     abondoned     abandoned  <NA>        NA
-#>  5  correponding corresponding  <NA>        NA
-#>  6 archeaologist archaeologist  <NA>        NA
-#>  7   emmediately   immediately  <NA>        NA
-#>  8    possessess     possesses  <NA>        NA
-#>  9       unahppy       unhappy  <NA>        NA
-#> 10        Guilio        Giulio  <NA>        NA
+#>    misspelling   correct       word  syllables
+#>    <chr>         <chr>         <chr>     <dbl>
+#>  1 Brasillian    Brazilian     <NA>         NA
+#>  2 belligerant   belligerent   <NA>         NA
+#>  3 occuring      occurring     <NA>         NA
+#>  4 abondoned     abandoned     <NA>         NA
+#>  5 correponding  corresponding <NA>         NA
+#>  6 archeaologist archaeologist <NA>         NA
+#>  7 emmediately   immediately   <NA>         NA
+#>  8 possessess    possesses     <NA>         NA
+#>  9 unahppy       unhappy       <NA>         NA
+#> 10 Guilio        Giulio        <NA>         NA
 #> # ... with 254 more rows
 ```
 
@@ -368,19 +368,19 @@ passages <- data_frame(text = prideprejudice) %>%
 
 passages
 #> # A tibble: 261 x 2
-#>    passage
-#>      <dbl>
-#>  1       1
-#>  2       2
-#>  3       3
-#>  4       4
-#>  5       5
-#>  6       6
-#>  7       7
-#>  8       8
-#>  9       9
-#> 10      10
-#> # ... with 251 more rows, and 1 more variables: text <chr>
+#>    passage text                                                           
+#>      <dbl> <chr>                                                          
+#>  1    1.00 "PRIDE AND PREJUDICE  By Jane Austen    Chapter 1   It is a tr…
+#>  2    2.00 "\"How so? How can it affect them?\"  \"My dear Mr. Bennet,\" …
+#>  3    3.00 "are my old friends. I have heard you mention them with consid…
+#>  4    4.00 "herself, began scolding one of her daughters.  \"Don't keep c…
+#>  5    5.00 " The astonishment of the ladies was just what he wished; that…
+#>  6    6.00 "married, I shall have nothing to wish for.\"  In a few days M…
+#>  7    7.00 "introduced to any other lady, and spent the rest of the eveni…
+#>  8    8.00 "party. Mr. Bingley had danced with her twice, and she had bee…
+#>  9    9.00 "  Chapter 4   When Jane and Elizabeth were alone, the former,…
+#> 10   10.0  Elizabeth listened in silence, but was not convinced; their be…
+#> # ... with 251 more rows
 ```
 
 Suppose we wanted to divide the passages based on which character's name is mentioned in each. Character's names may differ in how they are presented, so we construct a regular expression for each and pair it with that character's name.
@@ -423,19 +423,19 @@ This combines the two data frames based on cases where the `passages$text` colum
 character_passages %>%
   select(passage, character, text)
 #> # A tibble: 1,126 x 3
-#>    passage       character
-#>      <dbl>           <chr>
-#>  1       1      Mr. Bennet
-#>  2       1            Jane
-#>  3       2      Mr. Bennet
-#>  4       2            Jane
-#>  5       2           Lydia
-#>  6       2 Charlotte Lucas
-#>  7       3       Elizabeth
-#>  8       3      Mr. Bennet
-#>  9       3     Mrs. Bennet
-#> 10       4      Mr. Bennet
-#> # ... with 1,116 more rows, and 1 more variables: text <chr>
+#>    passage character       text                                     
+#>      <dbl> <chr>           <chr>                                    
+#>  1    1.00 Mr. Bennet      "PRIDE AND PREJUDICE  By Jane Austen    …
+#>  2    1.00 Jane            "PRIDE AND PREJUDICE  By Jane Austen    …
+#>  3    2.00 Mr. Bennet      "\"How so? How can it affect them?\"  \"…
+#>  4    2.00 Jane            "\"How so? How can it affect them?\"  \"…
+#>  5    2.00 Lydia           "\"How so? How can it affect them?\"  \"…
+#>  6    2.00 Charlotte Lucas "\"How so? How can it affect them?\"  \"…
+#>  7    3.00 Elizabeth       "are my old friends. I have heard you me…
+#>  8    3.00 Mr. Bennet      "are my old friends. I have heard you me…
+#>  9    3.00 Mrs. Bennet     "are my old friends. I have heard you me…
+#> 10    4.00 Mr. Bennet      "herself, began scolding one of her daug…
+#> # ... with 1,116 more rows
 ```
 
 This shows that Mr. Bennet's name appears in passages 1, 2, 4, and 6, while Charlotte Lucas's appears in 3. Notice that having fuzzy-joined the datasets, some passages will end up duplicated (those with multiple names in them), while it's possible others will be missing entirely (those without names).
@@ -447,22 +447,22 @@ We could ask which characters are mentioned in the most passages:
 character_passages %>%
   count(character, sort = TRUE)
 #> # A tibble: 14 x 2
-#>                   character     n
-#>                       <chr> <int>
-#>  1                Elizabeth   227
-#>  2                    Darcy   159
-#>  3                     Jane   134
-#>  4              Mrs. Bennet    89
-#>  5                  Wickham    89
-#>  6                    Lydia    79
-#>  7              Mr. Collins    75
-#>  8          Charlotte Lucas    68
-#>  9               Mr. Bennet    55
-#> 10                    Kitty    42
-#> 11            Mrs. Gardiner    35
+#>    character                    n
+#>    <chr>                    <int>
+#>  1 Elizabeth                  227
+#>  2 Darcy                      159
+#>  3 Jane                       134
+#>  4 Mrs. Bennet                 89
+#>  5 Wickham                     89
+#>  6 Lydia                       79
+#>  7 Mr. Collins                 75
+#>  8 Charlotte Lucas             68
+#>  9 Mr. Bennet                  55
+#> 10 Kitty                       42
+#> 11 Mrs. Gardiner               35
 #> 12 Lady Catherine de Bourgh    25
-#> 13             Mr. Gardiner    25
-#> 14                     Mary    24
+#> 13 Mr. Gardiner                25
+#> 14 Mary                        24
 ```
 
 The data is also well suited to discover which characters appear in scenes together, and to cluster them to find groupings of characters (like in [this analysis]).
