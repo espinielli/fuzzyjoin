@@ -2,7 +2,7 @@ Package: fuzzyjoin
 Type: Package
 Title: Join Tables Together on Inexact Matching
 Version: 0.1.4
-Date: 2018-02-25
+Date: 2018-03-01
 Authors@R: c(person("David", "Robinson", email = "admiral.david@gmail.com",
     role = c("aut", "cre")),
           person("Joran", "Elias", email = "statisticalskier@gmail.com",

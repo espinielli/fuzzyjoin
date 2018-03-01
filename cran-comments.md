@@ -1,23 +1,13 @@
-## Features
-
-* Added `interval_join`, which joins tables on cases where (start, end) intervals overlap between the two columns. This adds IRanges from Bioconductor to SUGGESTS.
-* Added `genome_join`, which is a more specific case of `interval_join` that joins tables on based on (chromosome, start, end), where the chromosome must agree and (start, end) must overlap.
-* Added `index_match_fun` argument to `fuzzy_join`, which handles functions (such as `interval_join` and `genome_join`) that operate on the original columns rather than all pairs of columns
-* Added `ignore_case` option to `regex_join` (thanks to Abraham Neuwirth; #26)
+This is a fix of two issues after the package has been archived on CRAN, particularly related to using SUGGESTS conditionally. My apologies. 
 
 ## Bug fixes
 
-* Fixed bug when matching multiple columns to the same column (#28)
-* Fixed bug in which rows were sometimes duplicated when no distance column was specified (#21)
-
-## Package Management
-
-* Changed maintainer email to my gmail address, to match my other packages on CRAN
-* Added more unit tests
+* Skip tests and examples for interval_join and genome_join when the IRanges package is not present
+* Fixed a failing interval join test; possibly due to a IRanges behavior change.
 
 ## Test environments
 
-* local OS X install, R 3.4.0
+* local OS X install, R 3.4.3
 * win-builder (devel and release)
 
 ## R CMD check results
