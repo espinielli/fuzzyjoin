@@ -79,7 +79,7 @@ sum(which_correct$guesses == 1 & which_correct$one_correct)
 
 Not bad.
 
-Note that `stringdist_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `stringdiststringdist_left_join`:
+Note that `stringdist_inner_join` is not the only function we can use. If we're interested in including the words that we *couldn't* classify, we could have use `stringdist_left_join`:
 
 ```{r left_joined, dependson = "misspellings"}
 left_joined <- sub_misspellings %>%
@@ -105,4 +105,4 @@ left_joined2 %>%
 
 Most of the missing words here simply aren't in our dictionary.
 
-You can try other distance thresholds, other dictionaries, and other distance metrics (see [stringdist-metrics] for more). This function is especially useful on a domain-specific dataset, such as free-form survey input that is likely to be close to one of a handful of responses.
+You can try other distance thresholds, other dictionaries, and other distance metrics (see [stringdist-metrics](https://www.rdocumentation.org/packages/stringdist/versions/0.9.4.6/topics/stringdist-metrics) for more). This function is especially useful on a domain-specific dataset, such as free-form survey input that is likely to be close to one of a handful of responses.
