@@ -11,7 +11,7 @@
 #' @param max_dist Maximum distance to use for joining
 #' @param ignore_case Whether to be case insensitive (default yes)
 #' @param method Method for computing string distance, see
-#' \code{stringdist-methods} in the stringdist package.
+#' \code{stringdist-metrics} in the stringdist package.
 #' @param distance_col If given, will add a column with this
 #' name containing the difference between the two
 #' @param mode One of "inner", "left", "right", "full" "semi", or "anti"
