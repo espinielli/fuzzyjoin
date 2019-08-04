@@ -84,14 +84,16 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
         col = col_x,
         indices = seq_along(col_x)
       ) %>%
-        tidyr::nest(indices) %>%
+        dplyr::group_by(col) %>%
+        tidyr::nest() %>%
         dplyr::mutate(indices = purrr::map(data, "indices"))
 
       indices_y <- tibble::tibble(
         col = col_y,
         indices = seq_along(col_y)
       ) %>%
-        tidyr::nest(indices) %>%
+        dplyr::group_by(col) %>%
+        tidyr::nest() %>%
         dplyr::mutate(indices = purrr::map(data, "indices"))
 
       u_x <- indices_x$col
@@ -180,12 +182,14 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
     indices_x <- x %>%
       dplyr::select_(.dots = by$x) %>%
       dplyr::mutate(indices = seq_len(number_x_rows)) %>%
-      tidyr::nest(indices) %>%
+      dplyr::group_by_at(dplyr::vars(-dplyr::one_of("indices"))) %>%
+      tidyr::nest() %>%
       dplyr::mutate(indices = purrr::map(data, "indices"))
     indices_y <- y %>%
       dplyr::select_(.dots = by$y) %>%
       dplyr::mutate(indices = seq_len(number_y_rows)) %>%
-      tidyr::nest(indices) %>%
+      dplyr::group_by_at(dplyr::vars(-dplyr::one_of("indices"))) %>%
+      tidyr::nest() %>%
       dplyr::mutate(indices = purrr::map(data, "indices"))
 
     ux <- as.matrix(indices_x[by$x])
