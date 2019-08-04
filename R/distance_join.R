@@ -40,7 +40,7 @@ distance_join <- function(x, y, by = NULL, max_dist = 1,
     } else if (method == "manhattan") {
       d <- rowSums(abs(v1 - v2))
     }
-    ret <- dplyr::data_frame(instance = d <= max_dist)
+    ret <- tibble::tibble(instance = d <= max_dist)
     if (!is.null(distance_col)) {
       ret[[distance_col]] <- d
     }

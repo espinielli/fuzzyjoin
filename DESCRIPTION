@@ -22,7 +22,8 @@ Imports:
     dplyr (>= 0.7.5),
     tidyr (>= 0.4.0),
     purrr,
-    geosphere
+    geosphere,
+    tibble
 Suggests:
     testthat,
     knitr,
@@ -34,4 +35,4 @@ Suggests:
     maps,
     IRanges,
     covr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1

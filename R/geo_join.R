@@ -112,7 +112,7 @@ geo_join <- function(x, y, by = NULL, max_dist,
       d <- d / 1000
     }
 
-    ret <- dplyr::data_frame(include = d <= max_dist)
+    ret <- tibble::tibble(include = d <= max_dist)
     if (!is.null(distance_col)) {
       ret[[distance_col]] <- d
     }

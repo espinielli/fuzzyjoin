@@ -12,7 +12,8 @@
 describing whether two vectors are matched or not}
 \usage{
 fuzzy_join(x, y, by = NULL, match_fun = NULL, multi_by = NULL,
-  multi_match_fun = NULL, index_match_fun = NULL, mode = "inner", ...)
+  multi_match_fun = NULL, index_match_fun = NULL, mode = "inner",
+  ...)
 
 fuzzy_inner_join(x, y, by = NULL, match_fun, ...)
 

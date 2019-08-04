@@ -10,9 +10,9 @@
 \alias{geo_anti_join}
 \title{Join two tables based on a geo distance of longitudes and latitudes}
 \usage{
-geo_join(x, y, by = NULL, max_dist, method = c("haversine", "geo", "cosine",
-  "meeus", "vincentysphere", "vincentyellipsoid"), unit = c("miles", "km"),
-  mode = "inner", distance_col = NULL, ...)
+geo_join(x, y, by = NULL, max_dist, method = c("haversine", "geo",
+  "cosine", "meeus", "vincentysphere", "vincentyellipsoid"),
+  unit = c("miles", "km"), mode = "inner", distance_col = NULL, ...)
 
 geo_inner_join(x, y, by = NULL, method = "haversine", max_dist = 1,
   distance_col = NULL, ...)
