@@ -256,10 +256,9 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
   matches <- dplyr::arrange(matches, x, y)
 
   # in cases where columns share a name, rename each to .x and .y
-  for (n in intersect(colnames(x), colnames(y))) {
-    x <- dplyr::rename_(x, .dots = structure(n, .Names = paste0(n, ".x")))
-    y <- dplyr::rename_(y, .dots = structure(n, .Names = paste0(n, ".y")))
-  }
+  n <- intersect(colnames(x), colnames(y))
+  x <- dplyr::rename_at(x, .vars = n, ~ paste0(.x, ".x"))
+  y <- dplyr::rename_at(y, .vars = n, ~ paste0(.x, ".y"))
 
   # fill in indices of the x, y, or both
   # curious if there's a higher performance approach
