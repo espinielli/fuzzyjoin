@@ -10,6 +10,11 @@ init:
 install:
   ps: Bootstrap
 
+environment:
+  NOT_CRAN: true
+  USE_RTOOLS: true
+  PKGTYPE: both
+
 # Adapt as necessary starting from here
 
 build_script:
