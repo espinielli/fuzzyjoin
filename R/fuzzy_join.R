@@ -70,6 +70,13 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
   if (!is.null(match_fun)) {
     by <- common_by(by, x, y)
 
+    # Support formula notation for functions
+    if (is.list(match_fun)) {
+      match_fun <- purrr::map(match_fun, purrr::as_mapper)
+    } else {
+      match_fun <- purrr::as_mapper(match_fun)
+    }
+
     if (length(match_fun) == 1) {
       match_fun <- rep(c(match_fun), length(by$x))
     }
@@ -174,6 +181,8 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
       }
     }
   } else if (!is.null(multi_match_fun)) {
+    multi_match_fun <- purrr::as_mapper(multi_match_fun)
+
     # use multiple matches
     by <- common_by(multi_by, x, y)
 
@@ -232,6 +241,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
     }
   } else {
     # raw index-index function
+    index_match_fun <- purrr::as_mapper(index_match_fun)
     by <- common_by(multi_by, x, y)
 
     d1 <- x[, by$x, drop = FALSE]
