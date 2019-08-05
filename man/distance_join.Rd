@@ -13,23 +13,23 @@
 distance_join(x, y, by = NULL, max_dist = 1, method = c("euclidean",
   "manhattan"), mode = "inner", distance_col = NULL)
 
-distance_inner_join(x, y, by = NULL, method = "euclidean", max_dist = 1,
-  distance_col = NULL)
+distance_inner_join(x, y, by = NULL, method = "euclidean",
+  max_dist = 1, distance_col = NULL)
 
-distance_left_join(x, y, by = NULL, method = "euclidean", max_dist = 1,
-  distance_col = NULL)
+distance_left_join(x, y, by = NULL, method = "euclidean",
+  max_dist = 1, distance_col = NULL)
 
-distance_right_join(x, y, by = NULL, method = "euclidean", max_dist = 1,
-  distance_col = NULL)
+distance_right_join(x, y, by = NULL, method = "euclidean",
+  max_dist = 1, distance_col = NULL)
 
-distance_full_join(x, y, by = NULL, method = "euclidean", max_dist = 1,
-  distance_col = NULL)
+distance_full_join(x, y, by = NULL, method = "euclidean",
+  max_dist = 1, distance_col = NULL)
 
-distance_semi_join(x, y, by = NULL, method = "euclidean", max_dist = 1,
-  distance_col = NULL)
+distance_semi_join(x, y, by = NULL, method = "euclidean",
+  max_dist = 1, distance_col = NULL)
 
-distance_anti_join(x, y, by = NULL, method = "euclidean", max_dist = 1,
-  distance_col = NULL)
+distance_anti_join(x, y, by = NULL, method = "euclidean",
+  max_dist = 1, distance_col = NULL)
 }
 \arguments{
 \item{x}{A tbl}

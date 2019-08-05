@@ -76,7 +76,7 @@ stringdist_join <- function(x, y, by = NULL, max_dist = 2,
       # have to compute them all
       dists <- stringdist::stringdist(v1, v2, method = method, ...)
     }
-    ret <- dplyr::data_frame(include = (dists <= max_dist))
+    ret <- tibble::tibble(include = (dists <= max_dist))
     if (!is.null(distance_col)) {
       ret[[distance_col]] <- dists
     }

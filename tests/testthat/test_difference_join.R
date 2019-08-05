@@ -1,8 +1,8 @@
 context("difference_inner_join")
 
 test_that("difference_inner_join works on a df with one match", {
-  sepal_lengths1 <- data_frame(Sepal.Length = c(5, 6, 7),
-                               Type = 1:3)
+  sepal_lengths1 <- tibble(Sepal.Length = c(5, 6, 7),
+                           Type = 1:3)
   j1 <- iris %>%
     difference_inner_join(sepal_lengths1, max_dist = .25, distance_col = "difference")
 
@@ -12,9 +12,9 @@ test_that("difference_inner_join works on a df with one match", {
 })
 
 test_that("difference_inner_join works on a df with two matches", {
-  sepal_lengths2 <- data_frame(Sepal.Length = c(5, 6, 7),
-                               Sepal.Width = 1:3,
-                               Type = 1:3)
+  sepal_lengths2 <- tibble(Sepal.Length = c(5, 6, 7),
+                           Sepal.Width = 1:3,
+                           Type = 1:3)
 
   j2 <- iris %>%
     difference_inner_join(sepal_lengths2, max_dist = .5, distance_col = "difference")

@@ -36,6 +36,7 @@
 #' but preserves the grouping of x in the output.
 #'
 #' @importFrom dplyr %>%
+#' @importFrom tibble tibble
 #'
 #' @export
 fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
@@ -54,7 +55,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
     # add .x to those that are missing; they've been renamed
     g[missing] <- paste0(g[missing], ".x")
 
-    dplyr::group_by_(d, .dots = g)
+    dplyr::group_by_at(d, g)
   }
 
   mode <- match.arg(mode, c("inner", "left", "right", "full", "semi", "anti"))
@@ -80,14 +81,20 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
       col_x <- x[[by$x[i]]]
       col_y <- y[[by$y[i]]]
 
-      indices_x <- dplyr::data_frame(col = col_x,
-                                     indices = seq_along(col_x)) %>%
-        tidyr::nest(indices) %>%
+      indices_x <- tibble::tibble(
+        col = col_x,
+        indices = seq_along(col_x)
+      ) %>%
+        dplyr::group_by(col) %>%
+        tidyr::nest() %>%
         dplyr::mutate(indices = purrr::map(data, "indices"))
 
-      indices_y <- dplyr::data_frame(col = col_y,
-                                     indices = seq_along(col_y)) %>%
-        tidyr::nest(indices) %>%
+      indices_y <- tibble::tibble(
+        col = col_y,
+        indices = seq_along(col_y)
+      ) %>%
+        dplyr::group_by(col) %>%
+        tidyr::nest() %>%
         dplyr::mutate(indices = purrr::map(data, "indices"))
 
       u_x <- indices_x$col
@@ -119,7 +126,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
 
       if (length(w) == 0) {
         # there are no matches
-        ret <- dplyr::data_frame(i = numeric(0), x = numeric(0), y = numeric(0))
+        ret <- tibble::tibble(i = numeric(0), x = numeric(0), y = numeric(0))
         return(ret)
       }
 
@@ -132,7 +139,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
       x_rep <- unlist(purrr::map2(x_indices_l, yls, function(x, y) rep(x, each = y)))
       y_rep <- unlist(purrr::map2(y_indices_l, xls, function(y, x) rep(y, x)))
 
-      ret <- dplyr::data_frame(i = i, x = x_rep, y = y_rep)
+      ret <- tibble::tibble(i = i, x = x_rep, y = y_rep)
 
       if (!is.null(extra_cols)) {
         extra_indices <- rep(w, xls * yls)
@@ -174,14 +181,16 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
     number_y_rows <- nrow(y)
 
     indices_x <- x %>%
-      dplyr::select_(.dots = by$x) %>%
+      dplyr::select_at(by$x) %>%
       dplyr::mutate(indices = seq_len(number_x_rows)) %>%
-      tidyr::nest(indices) %>%
+      dplyr::group_by_at(dplyr::vars(-dplyr::one_of("indices"))) %>%
+      tidyr::nest() %>%
       dplyr::mutate(indices = purrr::map(data, "indices"))
     indices_y <- y %>%
-      dplyr::select_(.dots = by$y) %>%
+      dplyr::select_at(by$y) %>%
       dplyr::mutate(indices = seq_len(number_y_rows)) %>%
-      tidyr::nest(indices) %>%
+      dplyr::group_by_at(dplyr::vars(-dplyr::one_of("indices"))) %>%
+      tidyr::nest() %>%
       dplyr::mutate(indices = purrr::map(data, "indices"))
 
     ux <- as.matrix(indices_x[by$x])
@@ -205,7 +214,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
 
     if (sum(m) == 0) {
       # there are no matches
-      matches <- dplyr::data_frame(x = numeric(0), y = numeric(0))
+      matches <- tibble::tibble(x = numeric(0), y = numeric(0))
     } else {
       x_indices_l <- indices_x$indices[ix[m]]
       y_indices_l <- indices_y$indices[iy[m]]
@@ -214,7 +223,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
       x_rep <- unlist(purrr::map2(x_indices_l, yls, function(x, y) rep(x, each = y)))
       y_rep <- unlist(purrr::map2(y_indices_l, xls, function(y, x) rep(y, x)))
 
-      matches <- dplyr::data_frame(x = x_rep, y = y_rep)
+      matches <- tibble::tibble(x = x_rep, y = y_rep)
       if (!is.null(extra_cols)) {
         extra_indices <- rep(which(m), xls * yls)
         extra_cols_rep <- extra_cols[extra_indices, , drop = FALSE]
@@ -247,27 +256,28 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
   matches <- dplyr::arrange(matches, x, y)
 
   # in cases where columns share a name, rename each to .x and .y
-  for (n in intersect(colnames(x), colnames(y))) {
-    x <- dplyr::rename_(x, .dots = structure(n, .Names = paste0(n, ".x")))
-    y <- dplyr::rename_(y, .dots = structure(n, .Names = paste0(n, ".y")))
-  }
+  n <- intersect(colnames(x), colnames(y))
+  x <- dplyr::rename_at(x, .vars = n, ~ paste0(.x, ".x"))
+  y <- dplyr::rename_at(y, .vars = n, ~ paste0(.x, ".y"))
 
   # fill in indices of the x, y, or both
   # curious if there's a higher performance approach
   if (mode == "left") {
-    matches <- dplyr::data_frame(x = seq_len(nrow(x))) %>%
+    matches <- tibble::tibble(x = seq_len(nrow(x))) %>%
       dplyr::left_join(matches, by = "x")
   } else if (mode == "right") {
-    matches <- dplyr::data_frame(y = seq_len(nrow(y))) %>%
+    matches <- tibble::tibble(y = seq_len(nrow(y))) %>%
       dplyr::left_join(matches, by = "y")
   } else if (mode == "full") {
     matches <- matches %>%
-      dplyr::full_join(dplyr::data_frame(x = seq_len(nrow(x))), by = "x") %>%
-      dplyr::full_join(dplyr::data_frame(y = seq_len(nrow(y))), by = "y")
+      dplyr::full_join(tibble::tibble(x = seq_len(nrow(x))), by = "x") %>%
+      dplyr::full_join(tibble::tibble(y = seq_len(nrow(y))), by = "y")
   }
 
-  ret <- dplyr::bind_cols(x[matches$x, , drop = FALSE],
-                          y[matches$y, , drop = FALSE])
+  ret <- dplyr::bind_cols(
+    x[matches$x, , drop = FALSE],
+    y[matches$y, , drop = FALSE]
+  )
   if (ncol(matches) > 2) {
     extra_cols <- matches[, -(1:2), drop = FALSE]
     ret <- dplyr::bind_cols(ret, extra_cols)
