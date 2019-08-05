@@ -253,14 +253,14 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
 
   if (mode == "semi") {
     # just use the x indices to include
-    return(regroup(x[sort(unique(matches$x)), ]))
+    return(regroup(x[sort(unique(matches$x)), , drop = FALSE]))
   }
   if (mode == "anti") {
     if (nrow(matches) == 0) {
       return(regroup(x))
     }
     # just use the x indices to exclude
-    return(regroup(x[-sort(unique(matches$x)), ]))
+    return(regroup(x[-sort(unique(matches$x)), , drop = FALSE]))
   }
 
   matches <- dplyr::arrange(matches, x, y)

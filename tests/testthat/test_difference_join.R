@@ -57,3 +57,18 @@ test_that("difference_ joins where there are no overlapping rows still get a dis
   expect_equal(colnames(result), "x")
   expect_equal(a, result)
 })
+
+test_that("semi and anti joins support one-column data.frames", {
+  a <- data.frame(x = 1:10)
+  b <- data.frame(y = 3:12)
+
+  result <- difference_semi_join(a, b, by = c(x = "y"), max_dist = 1.5)
+  expect_is(result, "data.frame")
+  expect_equal(colnames(result), "x")
+  expect_equal(nrow(result), 9)
+
+  result <- difference_anti_join(a, b, by = c(x = "y"), max_dist = 1.5)
+  expect_is(result, "data.frame")
+  expect_equal(colnames(result), "x")
+  expect_equal(nrow(result), 1)
+})
