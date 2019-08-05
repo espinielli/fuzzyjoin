@@ -61,8 +61,8 @@ genome_join <- function(x, y, by = NULL, mode = "inner", ...) {
     # nest around the chromosome column
     x$..index <- seq_len(nrow(x))
     y$..index <- seq_len(nrow(y))
-    nested_x <- tidyr::nest_(x, "x_data", colnames(x)[-1])
-    nested_y <- tidyr::nest_(y, "y_data", colnames(y)[-1])
+    nested_x <- tidyr::nest(dplyr::group_by_at(x, .vars = 1))
+    nested_y <- tidyr::nest(dplyr::group_by_at(y, .vars = 1))
     by <- c(colnames(nested_y)[1])
     names(by) <- colnames(nested_x)[1]
 
@@ -76,7 +76,7 @@ genome_join <- function(x, y, by = NULL, mode = "inner", ...) {
       data.frame(x = xd$..index[o$queryHits], y = yd$..index[o$subjectHits])
     }
 
-   ret <- purrr::map2_df(joined$x_data, joined$y_data, find_overlaps)
+   ret <- purrr::map2_df(joined$data.x, joined$data.y, find_overlaps)
    ret
   }
 
