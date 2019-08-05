@@ -1,13 +1,13 @@
 context("geo_join")
 
 set.seed(2016)
-latlong1 <- data_frame(index1 = 1:500,
-                       latitude = rnorm(500, 40),
-                       longitude = rnorm(500, 40))
+latlong1 <- tibble(index1 = 1:500,
+                   latitude = rnorm(500, 40),
+                   longitude = rnorm(500, 40))
 
-latlong2 <- data_frame(index2 = 1:500,
-                       latitude = rnorm(500, 40),
-                       longitude = rnorm(500, 40))
+latlong2 <- tibble(index2 = 1:500,
+                   latitude = rnorm(500, 40),
+                   longitude = rnorm(500, 40))
 
 ll1 <- as.matrix(latlong1[c("longitude", "latitude")])
 ll2 <- as.matrix(latlong2[c("longitude", "latitude")])

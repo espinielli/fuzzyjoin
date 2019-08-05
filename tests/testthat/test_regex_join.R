@@ -1,8 +1,8 @@
 context("regex_join")
 
 # setup
-d <- data_frame(cut_regex = c("^Idea", "emiu",
-                              "Very Good$", "Nowhere")) %>%
+d <- tibble(cut_regex = c("^Idea", "emiu",
+                          "Very Good$", "Nowhere")) %>%
   mutate(type = row_number())
 
 test_that("regex joins work", {

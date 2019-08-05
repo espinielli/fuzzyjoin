@@ -1,8 +1,9 @@
 context("stringdist_join")
 
 # setup
-d <- data_frame(cut2 = c("Idea", "Premiums", "Premiom",
-                         "VeryGood", "VeryGood", "Faiir")) %>%
+d <- tibble(
+  cut2 = c("Idea", "Premiums", "Premiom", "VeryGood", "VeryGood", "Faiir")
+  ) %>%
   mutate(type = row_number())
 
 test_that("stringdist_inner_join works on a large df with multiples in each", {
@@ -51,7 +52,7 @@ test_that("stringdist_left_join works as expected", {
 })
 
 
-d3 <- bind_rows(d2, data_frame(cut2 = "NewType", type = 4))
+d3 <- bind_rows(d2, tibble(cut2 = "NewType", type = 4))
 
 test_that("stringdist_right_join works as expected", {
   result <- diamonds %>%
@@ -112,9 +113,13 @@ test_that("stringdist_anti_join works as expected", {
 
 test_that("stringdist_inner_join works with multiple match functions", {
   # setup
-  d3 <- data_frame(cut2 = c("Idea", "Premiums", "Premiom",
-                           "VeryGood", "VeryGood", "Faiir"),
-                   carat2 = c(0, .5, 1, 1.5, 2, 2.5)) %>%
+  d3 <- tibble(
+    cut2 = c(
+      "Idea", "Premiums", "Premiom",
+      "VeryGood", "VeryGood", "Faiir"
+    ),
+    carat2 = c(0, .5, 1, 1.5, 2, 2.5)
+  ) %>%
     mutate(type = row_number())
 
   sdist <- function(s1, s2) stringdist::stringdist(s1, s2) <= 1
@@ -142,8 +147,10 @@ test_that("stringdist_inner_join works with multiple match functions", {
 
 
 test_that("stringdist_join works with data frames without matches", {
-  d <- data_frame(cut2 = c("Ideolll", "Premiumsss", "Premiomzzz",
-                           "VeryVeryGood", "VeryVeryGood", "FaiirsFair")) %>%
+  d <- tibble(cut2 = c(
+    "Ideolll", "Premiumsss", "Premiomzzz",
+    "VeryVeryGood", "VeryVeryGood", "FaiirsFair"
+  )) %>%
     mutate(type = row_number())
 
   j1 <- stringdist_inner_join(diamonds, d, by = c(cut = "cut2"))
@@ -212,8 +219,10 @@ test_that("stringdist_join can use soundex matching", {
 
 
 test_that("stringdist_join renames similar columns", {
-  d <- data_frame(cut = c("Idea", "Premiums", "Premiom",
-                           "VeryGood", "VeryGood", "Faiir")) %>%
+  d <- tibble(cut = c(
+    "Idea", "Premiums", "Premiom",
+    "VeryGood", "VeryGood", "Faiir"
+  )) %>%
     mutate(price = row_number())
 
   j <- stringdist_inner_join(diamonds, d, by = "cut")
@@ -229,15 +238,19 @@ test_that("stringdist_join renames similar columns", {
 
 
 test_that("stringdist_join works on grouped data frames", {
-  d <- data_frame(cut2 = c("Idea", "Premiums", "Premiom",
-                           "VeryGood", "VeryGood", "Faiir")) %>%
+  d <- tibble(cut2 = c(
+    "Idea", "Premiums", "Premiom",
+    "VeryGood", "VeryGood", "Faiir"
+  )) %>%
     mutate(type = row_number())
 
   diamonds_grouped <- diamonds %>%
     group_by(cut)
 
-  d2 <- data_frame(cut = c("Idea", "Premiums", "Premiom",
-                           "VeryGood", "VeryGood", "Faiir")) %>%
+  d2 <- tibble(cut = c(
+    "Idea", "Premiums", "Premiom",
+    "VeryGood", "VeryGood", "Faiir"
+  )) %>%
     mutate(type = row_number())
 
   for (mode in c("inner", "left", "right", "full", "semi", "anti")) {

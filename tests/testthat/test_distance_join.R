@@ -1,6 +1,6 @@
 context("distance_join")
 
-sepal_lengths <- data_frame(Sepal.Length = c(5, 6, 7), Sepal.Width = 1:3, Type = 1:3)
+sepal_lengths <- tibble(Sepal.Length = c(5, 6, 7), Sepal.Width = 1:3, Type = 1:3)
 
 test_that("distance_inner_join works for Euclidean distance", {
   ret <- iris %>%
