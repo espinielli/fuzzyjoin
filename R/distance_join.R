@@ -35,6 +35,12 @@ distance_join <- function(x, y, by = NULL, max_dist = 1,
   method <- match.arg(method)
 
   match_fun <- function(v1, v2) {
+    if (is.null(dim(v1))) {
+      # If the vectors are one-dimensional, turn them into 1-column matrices
+      v1 <- t(t(v1))
+      v2 <- t(t(v2))
+    }
+
     if (method == "euclidean") {
       d <- sqrt(rowSums((v1 - v2) ^ 2))
     } else if (method == "manhattan") {

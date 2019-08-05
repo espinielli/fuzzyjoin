@@ -87,6 +87,15 @@ test_that("distance_ functions besides inner work", {
   expect_equal(colnames(ret6), colnames(iris))
 })
 
+test_that("distance_inner_join works when there's only one distance column", {
+  a <- tibble(x = 1:10)
+  b <- tibble(y = 3:12)
+
+  result <- distance_inner_join(a, b, by = c("x" = "y"), max_dist = 1.5, distance_col = "distance")
+  expect_equal(nrow(result), 24)
+  expect_true(all(result$distance < 1.5))
+})
+
 test_that("distance joins where there are no overlapping rows still get a distance column", {
   a <- tibble(x = 1:10, y = 1:10)
   b <- tibble(x = 21:30, y = 21:30)
