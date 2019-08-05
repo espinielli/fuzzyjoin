@@ -83,7 +83,7 @@ stringdist_join <- function(x, y, by = NULL, max_dist = 2,
     ret
   }
 
-  fuzzy_join(x, y, by = by, mode = mode, match_fun = match_fun)
+  ensure_distance_col(fuzzy_join(x, y, by = by, mode = mode, match_fun = match_fun), distance_col, mode)
 }
 
 

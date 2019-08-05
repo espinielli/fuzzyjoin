@@ -30,7 +30,7 @@ difference_join <- function(x, y, by = NULL, max_dist = 1, mode = "inner",
     ret
   }
 
-  fuzzy_join(x, y, by = by, match_fun = match_fun, mode = mode)
+  ensure_distance_col(fuzzy_join(x, y, by = by, match_fun = match_fun, mode = mode), distance_col, mode)
 }
 
 

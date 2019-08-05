@@ -31,3 +31,29 @@ test_that("difference_inner_join works on a df with two matches", {
   expect_equal(j2$Sepal.Width.difference,
                abs(j2$Sepal.Width.x - j2$Sepal.Width.y))
 })
+
+test_that("difference_ joins where there are no overlapping rows still get a distance column", {
+  a <- tibble(x = 1:10)
+  b <- tibble(y = 21:30)
+
+  result <- difference_left_join(a, b, by = c(x = "y"), max_dist = 1, distance_col = "distance")
+
+  expect_equal(colnames(result), c("x", "y", "distance"))
+  expect_equal(nrow(result), 10)
+  expect_true(all(is.na(result$y)))
+  expect_true(all(is.na(result$distance)))
+
+  result <- difference_inner_join(a, b, by = c(x = "y"), max_dist = 1, distance_col = "distance")
+
+  expect_equal(colnames(result), c("x", "y", "distance"))
+  expect_equal(nrow(result), 0)
+
+  # Don't add it for semi or anti join
+  result <- difference_semi_join(a, b, by = c(x = "y"), max_dist = 1, distance_col = "distance")
+  expect_equal(colnames(result), "x")
+  expect_equal(nrow(result), 0)
+
+  result <- difference_anti_join(a, b, by = c(x = "y"), max_dist = 1, distance_col = "distance")
+  expect_equal(colnames(result), "x")
+  expect_equal(a, result)
+})

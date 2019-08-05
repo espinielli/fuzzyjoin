@@ -25,3 +25,17 @@ common_by <- function(by = NULL, x, y) {
     y = by
   )
 }
+
+# Make sure there's a distance column included in the output
+ensure_distance_col <- function(ret, distance_col, mode) {
+  if (!(mode %in% c("semi", "anti")) &&
+      !is.null(distance_col) &&
+      is.null(ret[[distance_col]])) {
+    if (nrow(ret) == 0) {
+      ret[[distance_col]] <- numeric(0)
+    } else {
+      ret[[distance_col]] <- NA
+    }
+  }
+  ret
+}

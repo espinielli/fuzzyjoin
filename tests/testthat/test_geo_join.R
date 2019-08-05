@@ -89,3 +89,28 @@ test_that("geo_inner_join throws an error when more than two columns match", {
   expect_error(geo_inner_join(latlongother1, latlongother2),
                "needs exactly two")
 })
+
+test_that("geo joins where there are no overlapping rows still get a distance column", {
+  a <- tibble(lat = 1:10, lon = 1:10)
+  b <- tibble(lat = 21:30, lon = 21:30)
+
+  result <- geo_left_join(a, b, by = c("lat", "lon"), max_dist = 1, distance_col = "distance")
+
+  expect_equal(colnames(result), c("lat.x", "lon.x", "lat.y", "lon.y", "distance"))
+  expect_equal(nrow(result), 10)
+  expect_true(all(is.na(result$lat.y)))
+  expect_true(all(is.na(result$distance)))
+
+  result <- geo_inner_join(a, b, by = c("lat", "lon"), max_dist = 1, distance_col = "distance")
+
+  expect_equal(colnames(result), c("lat.x", "lon.x", "lat.y", "lon.y", "distance"))
+  expect_equal(nrow(result), 0)
+
+  # Don't add it for semi or anti join
+  result <- geo_semi_join(a, b, by = c("lat", "lon"), max_dist = 1, distance_col = "distance")
+  expect_equal(colnames(result), colnames(a))
+  expect_equal(nrow(result), 0)
+
+  result <- geo_anti_join(a, b, by = c("lat", "lon"), max_dist = 1, distance_col = "distance")
+  expect_equal(a, result)
+})

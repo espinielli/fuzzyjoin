@@ -86,3 +86,31 @@ test_that("distance_ functions besides inner work", {
   expect_equal(nrow(ret6), sum(is.na(ret2$calculated_distance)))
   expect_equal(colnames(ret6), colnames(iris))
 })
+
+test_that("distance joins where there are no overlapping rows still get a distance column", {
+  a <- tibble(x = 1:10, y = 1:10)
+  b <- tibble(x = 21:30, y = 21:30)
+
+  result <- distance_left_join(a, b, by = c("x", "y"), max_dist = 1, distance_col = "distance")
+
+  expect_equal(colnames(result), c("x.x", "y.x", "x.y", "y.y", "distance"))
+  expect_equal(nrow(result), 10)
+  expect_true(all(is.na(result$y.y)))
+  expect_true(all(is.na(result$distance)))
+
+  result <- distance_inner_join(a, b, by = c("x", "y"), max_dist = 1, distance_col = "distance")
+
+  expect_equal(colnames(result), c("x.x", "y.x", "x.y", "y.y", "distance"))
+  expect_equal(nrow(result), 0)
+
+  # Don't add it for semi or anti join
+  result <- distance_semi_join(a, b, by = c("x", "y"), max_dist = 1, distance_col = "distance")
+  expect_equal(colnames(result), c("x", "y"))
+  expect_equal(nrow(result), 0)
+
+  result <- distance_anti_join(a, b, by = c("x", "y"), max_dist = 1, distance_col = "distance")
+  expect_equal(colnames(result), c("x", "y"))
+  expect_equal(a, result)
+})
+
+

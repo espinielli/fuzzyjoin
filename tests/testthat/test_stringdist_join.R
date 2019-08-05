@@ -289,3 +289,28 @@ test_that("stringdist fails with no common variables", {
   expect_error(stringdist_inner_join(diamonds, d),
                "No common variables")
 })
+
+test_that("stringdist_ joins where there are no overlapping rows still get a distance column", {
+  a <- tibble(x = c("apple", "banana"))
+  b <- tibble(y = c("orange", "mango"))
+
+  result <- stringdist_left_join(a, b, by = c(x = "y"), max_dist = 1, distance_col = "distance")
+
+  expect_equal(colnames(result), c("x", "y", "distance"))
+  expect_equal(nrow(result), 2)
+  expect_true(all(is.na(result$y)))
+  expect_true(all(is.na(result$distance)))
+
+  result <- stringdist_inner_join(a, b, by = c(x = "y"), max_dist = 1, distance_col = "distance")
+
+  expect_equal(colnames(result), c("x", "y", "distance"))
+  expect_equal(nrow(result), 0)
+
+  # Don't add it for semi or anti join
+  result <- stringdist_semi_join(a, b, by = c(x = "y"), max_dist = 1, distance_col = "distance")
+  expect_equal(colnames(result), "x")
+  expect_equal(nrow(result), 0)
+
+  result <- stringdist_anti_join(a, b, by = c(x = "y"), max_dist = 1, distance_col = "distance")
+  expect_equal(a, result)
+})
