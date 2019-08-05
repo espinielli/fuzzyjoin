@@ -55,7 +55,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
     # add .x to those that are missing; they've been renamed
     g[missing] <- paste0(g[missing], ".x")
 
-    dplyr::group_by_(d, .dots = g)
+    dplyr::group_by_at(d, g)
   }
 
   mode <- match.arg(mode, c("inner", "left", "right", "full", "semi", "anti"))
