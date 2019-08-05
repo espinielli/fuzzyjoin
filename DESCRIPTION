@@ -12,6 +12,7 @@ Description: Join tables together based not on whether columns
   Implementations include string distance and regular expression
   matching.
 License: MIT + file LICENSE
+Encoding: UTF-8
 LazyData: TRUE
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
