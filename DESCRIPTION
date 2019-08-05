@@ -36,3 +36,5 @@ Suggests:
     IRanges,
     covr
 RoxygenNote: 6.1.1
+URL: https://github.com/dgrtwo/fuzzyjoin
+BugReports: https://github.com/dgrtwo/fuzzyjoin/issues
