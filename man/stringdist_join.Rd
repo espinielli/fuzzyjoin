@@ -37,7 +37,7 @@ stringdist_anti_join(x, y, by = NULL, distance_col = NULL, ...)
 \item{max_dist}{Maximum distance to use for joining}
 
 \item{method}{Method for computing string distance, see
-\code{stringdist-methods} in the stringdist package.}
+\code{stringdist-metrics} in the stringdist package.}
 
 \item{mode}{One of "inner", "left", "right", "full" "semi", or "anti"}
 
