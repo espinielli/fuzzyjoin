@@ -181,13 +181,13 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
     number_y_rows <- nrow(y)
 
     indices_x <- x %>%
-      dplyr::select_(.dots = by$x) %>%
+      dplyr::select_at(by$x) %>%
       dplyr::mutate(indices = seq_len(number_x_rows)) %>%
       dplyr::group_by_at(dplyr::vars(-dplyr::one_of("indices"))) %>%
       tidyr::nest() %>%
       dplyr::mutate(indices = purrr::map(data, "indices"))
     indices_y <- y %>%
-      dplyr::select_(.dots = by$y) %>%
+      dplyr::select_at(by$y) %>%
       dplyr::mutate(indices = seq_len(number_y_rows)) %>%
       dplyr::group_by_at(dplyr::vars(-dplyr::one_of("indices"))) %>%
       tidyr::nest() %>%
