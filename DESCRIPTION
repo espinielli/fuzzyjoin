@@ -1,12 +1,11 @@
 Package: fuzzyjoin
 Type: Package
 Title: Join Tables Together on Inexact Matching
-Version: 0.1.4.9000
+Version: 0.1.5
 Authors@R: c(person("David", "Robinson", email = "admiral.david@gmail.com",
     role = c("aut", "cre")),
           person("Jennifer", "Bryan", email = "jenny@rstudio.com", role = "ctb"),
-          person("Joran", "Elias", email = "statisticalskier@gmail.com",
-          role = "ctb"))
+          person("Joran", "Elias", email = "statisticalskier@gmail.com", role = "ctb"))
 Maintainer: David Robinson <admiral.david@gmail.com>
 Description: Join tables together based not on whether columns
   match exactly, but whether they are similar by some comparison.

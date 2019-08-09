@@ -1,9 +1,9 @@
-# fuzzyjoin 0.1.4.9000
+# fuzzyjoin 0.1.5
 
 * fuzzy_join now supports formula notation for `match_fun`, `multi_match_fun`, and `index_match_fun`.
+* Many changes to internals to make compatible with newest versions of dplyr and tidyr (#58 and #60, @jennybc)
 * difference, distance, geo and stringdist joins now add a distance column even if there are no overlapping rows (fixes #57)
 * distance joins now support the case where there's only one column in common (fixes #43)
-* Many changes to internals to make compatible with newest versions of dplyr and tidyr (#58, @jennybc)
 * Fixed typos in documentation (#40, @ChrisMuir and #53, @brooke-watson)
 
 # fuzzyjoin 0.1.4
