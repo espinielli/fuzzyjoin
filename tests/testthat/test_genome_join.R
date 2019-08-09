@@ -35,4 +35,22 @@ test_that("Can join genomes on chromosomes and intervals", {
   expect_equal(nrow(j2), 4)
   expect_equal(j2$id.x, 1:4)
   expect_equal(j2$id.y, c(1, 2, 4, 3))
+
+  # Left and right joins
+  j3 <- genome_left_join(x1, x2, by = c("chromosome", "start", "end"))
+
+  expect_equal(nrow(j3), 4)
+  expect_equal(sum(is.na(j3$start.x)), 0)
+  expect_equal(sum(is.na(j3$start.y)), 2)
+  expect_true(all(j3$chromosome.x == j3$chromosome.y, na.rm = TRUE))
+
+  j4 <- genome_right_join(x1, x2, by = c("chromosome", "start", "end"))
+
+  expect_equal(nrow(j4), 4)
+  expect_equal(sum(is.na(j4$start.x)), 2)
+  expect_true(all(j4$chromosome.x == j4$chromosome.y, na.rm = TRUE))
+})
+
+test_that("genome_join throws an error if not given three columns", {
+  expect_error(genome_inner_join(x1, x2, by = c("start", "end")), "three columns")
 })
