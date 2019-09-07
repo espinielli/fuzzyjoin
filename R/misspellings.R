@@ -9,6 +9,7 @@
 #'
 #' @examples
 #'
+#' \dontrun{
 #' library(rvest)
 #' library(readr)
 #' library(dplyr)
@@ -26,6 +27,7 @@
 #'   mutate(misspelling = str_sub(misspelling, 1, -2)) %>%
 #'   unnest(correct = str_split(correct, ", ")) %>%
 #'   filter(Encoding(correct) != "UTF-8")
+#' }
 #'
 #' @source \url{https://en.wikipedia.org/wiki/Wikipedia:Lists_of_common_misspellings/For_machines}
 "misspellings"
