@@ -39,3 +39,8 @@ ensure_distance_col <- function(ret, distance_col, mode) {
   }
   ret
 }
+
+unrowwname <- function(x) {
+  rownames(x) <- NULL
+  x
+}
