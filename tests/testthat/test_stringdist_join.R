@@ -173,7 +173,7 @@ test_that("stringdist_join works with data frames without matches", {
   expect_true(all(is.na(j3$cut)))
 
   j4 <- stringdist_full_join(diamonds, d, by = c(cut = "cut2"))
-  expect_equal(nrow(j4), nrow(diamonds), nrow(d))
+  expect_equal(nrow(j4), nrow(diamonds) + nrow(d))
   expect_true(all(is.na(j4$cut) | is.na(j4$cut2)))
   expect_true(all(is.na(j4$carat) | is.na(j4$type)))
 
