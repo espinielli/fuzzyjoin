@@ -43,10 +43,10 @@ test_that("Can do non-inner joins on intervals", {
   expect_equal(j_full$start.y, c(2, 4, NA, 16))
 
   j_semi <- interval_semi_join(x1, y1, by = b1)
-  expect_equal(j_semi, x1[1:2, ])
+  expect_equal(j_semi, as_tibble(x1[1:2, ]))
 
   j_anti <- interval_anti_join(x1, y1, by = b1)
-  expect_equal(j_anti, x1[3, ])
+  expect_equal(j_anti, as_tibble(x1[3, ]))
 })
 
 test_that("Can do inner joins on intervals with findOverlaps arguments", {
