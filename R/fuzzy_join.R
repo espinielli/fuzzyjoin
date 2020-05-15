@@ -46,7 +46,7 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
   x_groups <- dplyr::groups(x)
   x <- dplyr::ungroup(x)
   regroup <- function(d) {
-    if (is.null(x_groups)) {
+    if (length(x_groups) == 0) {
       return(d)
     }
 
