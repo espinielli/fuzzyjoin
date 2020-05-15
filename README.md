@@ -14,7 +14,7 @@ fuzzyjoin: Join data frames on inexact matching
 The fuzzyjoin package is a variation on dplyr's join operations that allows matching not just on values that match between columns, but on inexact matching. This allows matching on:
 
 * Numeric values that are within some tolerance (`difference_inner_join`)
-* Strings that are similiar in Levenshtein/cosine/Jaccard distance, or [other metrics](http://finzi.psych.upenn.edu/library/stringdist/html/stringdist-metrics.html) from the [stringdist](https://cran.r-project.org/package=stringdist) package (`stringdist_inner_join`)
+* Strings that are similar in Levenshtein/cosine/Jaccard distance, or [other metrics](http://finzi.psych.upenn.edu/library/stringdist/html/stringdist-metrics.html) from the [stringdist](https://cran.r-project.org/package=stringdist) package (`stringdist_inner_join`)
 * A regular expression in one column matching to another (`regex_inner_join`)
 * Euclidean or Manhattan distance across multiple columns (`distance_inner_join`)
 * Geographic distance based on longitude and latitude (`geo_inner_join`)
