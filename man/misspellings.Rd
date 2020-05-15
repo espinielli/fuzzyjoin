@@ -5,7 +5,9 @@
 \alias{misspellings}
 \title{A corpus of common misspellings, for examples and
 practice}
-\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 4505 rows and 2 columns.}
+\format{
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 4505 rows and 2 columns.
+}
 \source{
 \url{https://en.wikipedia.org/wiki/Wikipedia:Lists_of_common_misspellings/For_machines}
 }
@@ -21,6 +23,7 @@ code below.
 }
 \examples{
 
+\dontrun{
 library(rvest)
 library(readr)
 library(dplyr)
@@ -38,6 +41,7 @@ misspellings <- h \%>\%
   mutate(misspelling = str_sub(misspelling, 1, -2)) \%>\%
   unnest(correct = str_split(correct, ", ")) \%>\%
   filter(Encoding(correct) != "UTF-8")
+}
 
 }
 \keyword{datasets}

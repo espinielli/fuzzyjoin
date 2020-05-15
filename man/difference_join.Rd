@@ -10,26 +10,26 @@
 \alias{difference_anti_join}
 \title{Join two tables based on absolute difference between their columns}
 \usage{
-difference_join(x, y, by = NULL, max_dist = 1, mode = "inner",
-  distance_col = NULL)
+difference_join(
+  x,
+  y,
+  by = NULL,
+  max_dist = 1,
+  mode = "inner",
+  distance_col = NULL
+)
 
-difference_inner_join(x, y, by = NULL, max_dist = 1,
-  distance_col = NULL)
+difference_inner_join(x, y, by = NULL, max_dist = 1, distance_col = NULL)
 
-difference_left_join(x, y, by = NULL, max_dist = 1,
-  distance_col = NULL)
+difference_left_join(x, y, by = NULL, max_dist = 1, distance_col = NULL)
 
-difference_right_join(x, y, by = NULL, max_dist = 1,
-  distance_col = NULL)
+difference_right_join(x, y, by = NULL, max_dist = 1, distance_col = NULL)
 
-difference_full_join(x, y, by = NULL, max_dist = 1,
-  distance_col = NULL)
+difference_full_join(x, y, by = NULL, max_dist = 1, distance_col = NULL)
 
-difference_semi_join(x, y, by = NULL, max_dist = 1,
-  distance_col = NULL)
+difference_semi_join(x, y, by = NULL, max_dist = 1, distance_col = NULL)
 
-difference_anti_join(x, y, by = NULL, max_dist = 1,
-  distance_col = NULL)
+difference_anti_join(x, y, by = NULL, max_dist = 1, distance_col = NULL)
 }
 \arguments{
 \item{x}{A tbl}

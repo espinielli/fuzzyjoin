@@ -52,5 +52,7 @@ test_that("Can join genomes on chromosomes and intervals", {
 })
 
 test_that("genome_join throws an error if not given three columns", {
+  skip_if_not_installed("IRanges")
+
   expect_error(genome_inner_join(x1, x2, by = c("start", "end")), "three columns")
 })
