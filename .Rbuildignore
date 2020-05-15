@@ -9,3 +9,4 @@ vignettes/.*cache
 ^appveyor\.yml$
 ^CONDUCT\.md$
 ^docs$
+^CRAN-RELEASE$
