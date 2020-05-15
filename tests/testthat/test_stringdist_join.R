@@ -236,10 +236,18 @@ test_that("stringdist_join renames similar columns", {
   expect_true(all(j$price.y %in% d$price))
 })
 
-test_that("stringdist_join returns a data.frame when x is a data.frame", {
+test_that(paste("stringdist_join returns a data.frame when x",
+                "is a data.frame, whether y is or not"), {
   result <- diamonds %>%
     as.data.frame() %>%
     stringdist_inner_join(d, by = c(cut = "cut2"))
+
+  expect_is(result, "data.frame")
+  expect_false(inherits(result, "tbl_df"))
+
+  result <- diamonds %>%
+    as.data.frame() %>%
+    stringdist_inner_join(as.data.frame(d), by = c(cut = "cut2"))
 
   expect_is(result, "data.frame")
   expect_false(inherits(result, "tbl_df"))

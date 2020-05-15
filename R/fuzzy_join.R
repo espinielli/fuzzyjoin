@@ -293,7 +293,14 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
     ret <- dplyr::bind_cols(ret, extra_cols)
   }
 
-  regroup(ret)
+  ret <- regroup(ret)
+
+  # Base the type (data.frame vs tbl_df) on x, not on y
+  if (!inherits(x, "tbl_df")) {
+    ret <- as.data.frame(ret)
+  }
+
+  ret
 }
 
 
