@@ -1,3 +1,7 @@
+# fuzzyjoin 0.1.6
+
+* Updates to internals to make compatible with dplyr 1.0.0 (#67, @hadley)
+
 # fuzzyjoin 0.1.5
 
 * fuzzy_join now supports formula notation for `match_fun`, `multi_match_fun`, and `index_match_fun`.
