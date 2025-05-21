@@ -39,9 +39,17 @@
 #' @importFrom tibble tibble
 #'
 #' @export
-fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
-                       multi_by = NULL, multi_match_fun = NULL,
-                       index_match_fun = NULL, mode = "inner", ...) {
+fuzzy_join <- function(
+  x,
+  y,
+  by = NULL,
+  match_fun = NULL,
+  multi_by = NULL,
+  multi_match_fun = NULL,
+  index_match_fun = NULL,
+  mode = "inner",
+  ...
+) {
   # preserve the grouping of x
   x_groups <- dplyr::groups(x)
   x <- dplyr::ungroup(x)
@@ -64,7 +72,9 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
     (!is.null(match_fun)) +
     (!is.null(index_match_fun))
   if (sum(non_nulls) != 1) {
-    stop("Must give exactly one of match_fun, multi_match_fun, and index_match_fun")
+    stop(
+      "Must give exactly one of match_fun, multi_match_fun, and index_match_fun"
+    )
   }
 
   if (!is.null(match_fun)) {
@@ -81,7 +91,10 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
       match_fun <- rep(c(match_fun), length(by$x))
     }
     if (length(match_fun) != length(by$x)) {
-      stop("Length of match_fun not equal to columns specified in 'by'.", call. = FALSE)
+      stop(
+        "Length of match_fun not equal to columns specified in 'by'.",
+        call. = FALSE
+      )
     }
 
     matches <- dplyr::bind_rows(lapply(seq_along(by$x), function(i) {
@@ -143,7 +156,11 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
       xls <- sapply(x_indices_l, length)
       yls <- sapply(y_indices_l, length)
 
-      x_rep <- unlist(purrr::map2(x_indices_l, yls, function(x, y) rep(x, each = y)))
+      x_rep <- unlist(purrr::map2(
+        x_indices_l,
+        yls,
+        function(x, y) rep(x, each = y)
+      ))
       y_rep <- unlist(purrr::map2(y_indices_l, xls, function(y, x) rep(y, x)))
 
       ret <- tibble::tibble(i = i, x = x_rep, y = y_rep)
@@ -229,7 +246,11 @@ fuzzy_join <- function(x, y, by = NULL, match_fun = NULL,
       y_indices_l <- indices_y$indices[iy[m]]
       xls <- purrr::map_dbl(x_indices_l, length)
       yls <- purrr::map_dbl(y_indices_l, length)
-      x_rep <- unlist(purrr::map2(x_indices_l, yls, function(x, y) rep(x, each = y)))
+      x_rep <- unlist(purrr::map2(
+        x_indices_l,
+        yls,
+        function(x, y) rep(x, each = y)
+      ))
       y_rep <- unlist(purrr::map2(y_indices_l, xls, function(y, x) rep(y, x)))
 
       matches <- tibble::tibble(x = x_rep, y = y_rep)
