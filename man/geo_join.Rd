@@ -88,7 +88,9 @@ geo_anti_join(
 
 \item{y}{A tbl}
 
-\item{by}{Columns by which to join the two tables}
+\item{by}{Columns by which to join the two tables. Must contain 'lon'
+for longitute, and 'lat' for latitude, such as 'lat', or
+'lat.y', or 'latitude'.}
 
 \item{max_dist}{Maximum distance to use for joining}
 

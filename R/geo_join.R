@@ -8,7 +8,9 @@
 #'
 #' @param x A tbl
 #' @param y A tbl
-#' @param by Columns by which to join the two tables
+#' @param by Columns by which to join the two tables. Must contain 'lon'
+#'  for longitute, and 'lat' for latitude, such as 'lat', or
+#'  'lat.y', or 'latitude'.
 #' @param max_dist Maximum distance to use for joining
 #' @param method Method to use for computing distance: one of
 #' "haversine" (default), "geo", "cosine", "meeus", "vincentysphere",
@@ -63,22 +65,36 @@
 #'   geo_inner_join(s2, max_dist = 200, distance_col = "distance")
 #'
 #' @export
-geo_join <- function(x, y, by = NULL, max_dist,
-                     method = c("haversine", "geo", "cosine", "meeus",
-                                "vincentysphere", "vincentyellipsoid"),
-                     unit = c("miles", "km"),
-                     mode = "inner",
-                     distance_col = NULL,
-                     ...) {
+geo_join <- function(
+  x,
+  y,
+  by = NULL,
+  max_dist,
+  method = c(
+    "haversine",
+    "geo",
+    "cosine",
+    "meeus",
+    "vincentysphere",
+    "vincentyellipsoid"
+  ),
+  unit = c("miles", "km"),
+  mode = "inner",
+  distance_col = NULL,
+  ...
+) {
   method <- match.arg(method)
   unit <- match.arg(unit)
 
   # make sure longitude and latitude are in the right order
-  by <- common_by(by, x, y)
+  by <- dplyr::common_by(by, x, y)
   by <- lapply(by, function(e) {
     if (length(e) != 2) {
-      stop("Trying to join on ", paste(e, collapse = ", "),
-           "; geo_join needs exactly two columns (latitude and longitude)")
+      stop(
+        "Trying to join on ",
+        paste(e, collapse = ", "),
+        "; geo_join needs exactly two columns (latitude and longitude)"
+      )
     }
     firstthree <- stringr::str_extract(stringr::str_to_lower(e), "(lon|lat)")
     colmatches <- match(c("lon", "lat"), firstthree)
@@ -119,59 +135,153 @@ geo_join <- function(x, y, by = NULL, max_dist,
     ret
   }
 
-  ensure_distance_col(fuzzy_join(x, y, multi_by = by, multi_match_fun = match_fun, mode = mode), distance_col, mode)
+  ensure_distance_col(
+    fuzzy_join(x, y, multi_by = by, multi_match_fun = match_fun, mode = mode),
+    distance_col,
+    mode
+  )
 }
 
 
 #' @rdname geo_join
 #' @export
-geo_inner_join <- function(x, y, by = NULL, method = "haversine", max_dist = 1,
-                           distance_col = NULL, ...) {
-  geo_join(x, y, by, max_dist = max_dist, method = method, mode = "inner",
-           distance_col = distance_col, ...)
+geo_inner_join <- function(
+  x,
+  y,
+  by = NULL,
+  method = "haversine",
+  max_dist = 1,
+  distance_col = NULL,
+  ...
+) {
+  geo_join(
+    x,
+    y,
+    by,
+    max_dist = max_dist,
+    method = method,
+    mode = "inner",
+    distance_col = distance_col,
+    ...
+  )
 }
 
 
 #' @rdname geo_join
 #' @export
-geo_left_join <- function(x, y, by = NULL, method = "haversine", max_dist = 1,
-                          distance_col = NULL, ...) {
-  geo_join(x, y, by, max_dist = max_dist, method = method, mode = "left",
-           distance_col = distance_col, ...)
+geo_left_join <- function(
+  x,
+  y,
+  by = NULL,
+  method = "haversine",
+  max_dist = 1,
+  distance_col = NULL,
+  ...
+) {
+  geo_join(
+    x,
+    y,
+    by,
+    max_dist = max_dist,
+    method = method,
+    mode = "left",
+    distance_col = distance_col,
+    ...
+  )
 }
 
 
 #' @rdname geo_join
 #' @export
-geo_right_join <- function(x, y, by = NULL, method = "haversine", max_dist = 1,
-                           distance_col = NULL, ...) {
-  geo_join(x, y, by, max_dist = max_dist, method = method, mode = "right",
-           distance_col = distance_col, ...)
+geo_right_join <- function(
+  x,
+  y,
+  by = NULL,
+  method = "haversine",
+  max_dist = 1,
+  distance_col = NULL,
+  ...
+) {
+  geo_join(
+    x,
+    y,
+    by,
+    max_dist = max_dist,
+    method = method,
+    mode = "right",
+    distance_col = distance_col,
+    ...
+  )
 }
 
 
 #' @rdname geo_join
 #' @export
-geo_full_join <- function(x, y, by = NULL, method = "haversine", max_dist = 1,
-                          distance_col = NULL, ...) {
-  geo_join(x, y, by, max_dist = max_dist, method = method, mode = "full",
-           distance_col = distance_col, ...)
+geo_full_join <- function(
+  x,
+  y,
+  by = NULL,
+  method = "haversine",
+  max_dist = 1,
+  distance_col = NULL,
+  ...
+) {
+  geo_join(
+    x,
+    y,
+    by,
+    max_dist = max_dist,
+    method = method,
+    mode = "full",
+    distance_col = distance_col,
+    ...
+  )
 }
 
 
 #' @rdname geo_join
 #' @export
-geo_semi_join <- function(x, y, by = NULL, method = "haversine", max_dist = 1,
-                          distance_col = NULL, ...) {
-  geo_join(x, y, by, max_dist = max_dist, method = method, mode = "semi",
-           distance_col = distance_col, ...)
+geo_semi_join <- function(
+  x,
+  y,
+  by = NULL,
+  method = "haversine",
+  max_dist = 1,
+  distance_col = NULL,
+  ...
+) {
+  geo_join(
+    x,
+    y,
+    by,
+    max_dist = max_dist,
+    method = method,
+    mode = "semi",
+    distance_col = distance_col,
+    ...
+  )
 }
 
 
 #' @rdname geo_join
 #' @export
-geo_anti_join <- function(x, y, by = NULL, method = "haversine", max_dist = 1,
-                          distance_col = NULL, ...) {
-  geo_join(x, y, by, max_dist = max_dist, method = method, mode = "anti",
-           distance_col = distance_col, ...)
+geo_anti_join <- function(
+  x,
+  y,
+  by = NULL,
+  method = "haversine",
+  max_dist = 1,
+  distance_col = NULL,
+  ...
+) {
+  geo_join(
+    x,
+    y,
+    by,
+    max_dist = max_dist,
+    method = method,
+    mode = "anti",
+    distance_col = distance_col,
+    ...
+  )
 }
