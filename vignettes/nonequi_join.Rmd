@@ -28,10 +28,10 @@ For example, let's say we have a vector (or column of a data frame) of elements,
 elements <- c(0.1, 0.2, 0.5, 0.9, 1.1, 1.9, 2.1)
 
 # Here is our data frame of intervals (called phases here)
-intervals <-  frame_data(~phase, ~start, ~end,
-                            "a",     0,    0.5,
-                            "b",     1,    1.9,
-                            "c",     2,    2.5)
+intervals <-  tribble(~phase, ~start, ~end,
+                         "a",      0,  0.5,
+                         "b",      1,  1.9,
+                         "c",      2,  2.5)
 ```
 
 Here we have three phases (or intervals), and a set of elements, some of which fall into the three phases. How can we easily determine the phase that each element belongs to?
